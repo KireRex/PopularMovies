@@ -12,14 +12,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.Type;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 import static com.scheffer.erik.popularmovies.MovieDatabaseApi.ApiConstants.MOVIES_DATABASE_API_KEY;
 import static com.scheffer.erik.popularmovies.MovieDatabaseApi.ApiConstants.MOVIES_DATABASE_BASE_URL;
@@ -27,23 +29,20 @@ import static com.scheffer.erik.popularmovies.MovieDatabaseApi.ApiConstants.MOVI
 public class ApiConnection {
 
     public static List<Movie> getMovies(SearchCriteria criteria) throws IOException {
-        HttpURLConnection urlConnection = (HttpURLConnection) buildUrl(criteria).openConnection();
+        OkHttpClient client = new OkHttpClient();
+
+        Request request = new Request.Builder()
+                .url(buildUrl(criteria))
+                .build();
+
+        Response response = client.newCall(request).execute();
         try {
-            InputStream in = urlConnection.getInputStream();
-
-            Scanner scanner = new Scanner(in);
-            scanner.useDelimiter("\\A");
-
-            boolean hasInput = scanner.hasNext();
-            if (hasInput) {
-                return extractMoviesList(scanner.next());
-            } else {
-                return new ArrayList<>();
+            ResponseBody r = response.body();
+            if (r != null) {
+                return extractMoviesList(r.string());
             }
         } catch (JSONException e) {
             e.printStackTrace();
-        } finally {
-            urlConnection.disconnect();
         }
         return new ArrayList<>();
     }
