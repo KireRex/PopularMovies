@@ -1,11 +1,24 @@
-<GridView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/movie_grid"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:horizontalSpacing="0dp"
-    android:numColumns="auto_fit"
-    android:stretchMode="columnWidth"
-    android:verticalSpacing="8dp"
     android:gravity="center"
-    tools:context="com.scheffer.erik.popularmovies.MovieListActivity" />
+    android:orientation="vertical">
+
+    <GridView
+        android:id="@+id/movie_grid"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:horizontalSpacing="0dp"
+        android:numColumns="auto_fit"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="8dp"
+        tools:context="com.scheffer.erik.popularmovies.MovieListActivity" />
+
+    <TextView
+        android:id="@+id/no_movies_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/no_movies_text" />
+</LinearLayout>

@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Popular Movies</string>
 
+    <!--MovieListActivity-->
+    <string name="no_movies_text">Unable to retrieve any movie</string>
+
     <!--Menu-->
     <string name="most_popular">Most Popular</string>
     <string name="top_rated">Top Rated</string>

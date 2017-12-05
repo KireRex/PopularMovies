@@ -26,6 +26,7 @@ public class MovieListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_movie_list);
 
         movieGrid = findViewById(R.id.movie_grid);
+        movieGrid.setEmptyView(findViewById(R.id.no_movies_text));
         new MoviesDatabaseTask(SearchCriteria.POPULAR).execute();
     }
 
