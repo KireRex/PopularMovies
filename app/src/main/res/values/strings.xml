@@ -4,4 +4,7 @@
     <!--Menu-->
     <string name="most_popular">Most Popular</string>
     <string name="top_rated">Top Rated</string>
+
+    <!--Image Description-->
+    <string name="movie_poster">Movie Poster</string>
 </resources>
