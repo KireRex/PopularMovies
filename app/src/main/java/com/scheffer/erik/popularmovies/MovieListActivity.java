@@ -1,11 +1,15 @@
 package com.scheffer.erik.popularmovies;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import com.scheffer.erik.popularmovies.MovieDatabaseApi.ApiConnection;
 import com.scheffer.erik.popularmovies.MovieDatabaseApi.Movie;
@@ -15,6 +19,8 @@ import com.scheffer.erik.popularmovies.MovieDatabaseApi.SearchCriteria;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.scheffer.erik.popularmovies.MovieDetailsActivity.MOVIE_EXTRA_NAME;
 
 public class MovieListActivity extends AppCompatActivity {
 
@@ -27,6 +33,17 @@ public class MovieListActivity extends AppCompatActivity {
 
         movieGrid = findViewById(R.id.movie_grid);
         movieGrid.setEmptyView(findViewById(R.id.no_movies_text));
+        movieGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Movie movie = (Movie) parent.getItemAtPosition(position);
+                Intent movieDetailsIntent = new Intent(MovieListActivity.this,
+                                                       MovieDetailsActivity.class);
+                movieDetailsIntent.putExtra(MOVIE_EXTRA_NAME, movie);
+                startActivity(movieDetailsIntent);
+            }
+        });
+
         new MoviesDatabaseTask(SearchCriteria.POPULAR).execute();
     }
 
@@ -63,6 +80,10 @@ public class MovieListActivity extends AppCompatActivity {
                 return ApiConnection.getMovies(criteria);
             } catch (IOException e) {
                 e.printStackTrace();
+                Toast.makeText(MovieListActivity.this,
+                               "Unable to retrieve movie data",
+                               Toast.LENGTH_LONG)
+                     .show();
                 return new ArrayList<>();
             }
         }

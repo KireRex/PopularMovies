@@ -1,10 +1,48 @@
 package com.scheffer.erik.popularmovies.MovieDatabaseApi;
 
-public class Movie {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Movie implements Parcelable {
     private String title;
-    private float vote_average;
+    private float voteAverage;
     private String overview;
     private String posterPath;
+    private String releaseDate;
+
+    private Movie(Parcel in) {
+        title = in.readString();
+        voteAverage = in.readFloat();
+        overview = in.readString();
+        posterPath = in.readString();
+        releaseDate = in.readString();
+    }
+
+    public static final Creator<Movie> CREATOR = new Creator<Movie>() {
+        @Override
+        public Movie createFromParcel(Parcel in) {
+            return new Movie(in);
+        }
+
+        @Override
+        public Movie[] newArray(int size) {
+            return new Movie[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(title);
+        dest.writeFloat(voteAverage);
+        dest.writeString(overview);
+        dest.writeString(posterPath);
+        dest.writeString(releaseDate);
+    }
 
     public String getTitle() {
         return title;
@@ -14,12 +52,12 @@ public class Movie {
         this.title = title;
     }
 
-    public float getVote_average() {
-        return vote_average;
+    public float getVoteAverage() {
+        return voteAverage;
     }
 
-    public void setVote_average(float vote_average) {
-        this.vote_average = vote_average;
+    public void setVoteAverage(float voteAverage) {
+        this.voteAverage = voteAverage;
     }
 
     public String getOverview() {
@@ -38,11 +76,19 @@ public class Movie {
         this.posterPath = posterPath;
     }
 
+    public String getReleaseDate() {
+        return releaseDate;
+    }
+
+    public void setReleaseDate(String releaseDate) {
+        this.releaseDate = releaseDate;
+    }
+
     @Override
     public String toString() {
         return "Movie{" +
                 "title='" + title + '\'' +
-                ", vote_average=" + vote_average +
+                ", voteAverage=" + voteAverage +
                 ", overview='" + overview + '\'' +
                 ", posterPath='" + posterPath + '\'' +
                 '}';
