@@ -4,6 +4,10 @@
     <!--MovieListActivity-->
     <string name="no_movies_text">Unable to retrieve any movie</string>
 
+    <!--MovieDetailsActivity-->
+    <string name="rating_label">Rating:</string>
+    <string name="release_date_label">Release Date:</string>
+
     <!--Menu-->
     <string name="most_popular">Most Popular</string>
     <string name="top_rated">Top Rated</string>

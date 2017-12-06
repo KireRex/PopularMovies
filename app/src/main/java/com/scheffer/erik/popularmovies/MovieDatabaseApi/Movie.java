@@ -3,19 +3,21 @@ package com.scheffer.erik.popularmovies.MovieDatabaseApi;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Date;
+
 public class Movie implements Parcelable {
     private String title;
     private float voteAverage;
     private String overview;
     private String posterPath;
-    private String releaseDate;
+    private Date releaseDate;
 
     private Movie(Parcel in) {
         title = in.readString();
         voteAverage = in.readFloat();
         overview = in.readString();
         posterPath = in.readString();
-        releaseDate = in.readString();
+        releaseDate = new Date(in.readLong());
     }
 
     public static final Creator<Movie> CREATOR = new Creator<Movie>() {
@@ -41,7 +43,7 @@ public class Movie implements Parcelable {
         dest.writeFloat(voteAverage);
         dest.writeString(overview);
         dest.writeString(posterPath);
-        dest.writeString(releaseDate);
+        dest.writeLong(releaseDate.getTime());
     }
 
     public String getTitle() {
@@ -76,11 +78,11 @@ public class Movie implements Parcelable {
         this.posterPath = posterPath;
     }
 
-    public String getReleaseDate() {
+    public Date getReleaseDate() {
         return releaseDate;
     }
 
-    public void setReleaseDate(String releaseDate) {
+    public void setReleaseDate(Date releaseDate) {
         this.releaseDate = releaseDate;
     }
 
@@ -91,6 +93,7 @@ public class Movie implements Parcelable {
                 ", voteAverage=" + voteAverage +
                 ", overview='" + overview + '\'' +
                 ", posterPath='" + posterPath + '\'' +
+                ", releaseDate=" + releaseDate +
                 '}';
     }
 }

@@ -2,6 +2,7 @@ package com.scheffer.erik.popularmovies;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.format.DateFormat;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -24,6 +25,9 @@ public class MovieDetailsActivity extends AppCompatActivity {
         ((TextView) findViewById(R.id.movie_title)).setText(movie.getTitle());
         ((TextView) findViewById(R.id.movie_synopsis)).setText(movie.getOverview());
         ((TextView) findViewById(R.id.movie_rating)).setText(String.valueOf(movie.getVoteAverage()));
-        ((TextView) findViewById(R.id.movie_release_date)).setText(movie.getReleaseDate());
+
+        ((TextView) findViewById(R.id.movie_release_date))
+                .setText(DateFormat.getDateFormat(this)
+                                   .format(movie.getReleaseDate()));
     }
 }

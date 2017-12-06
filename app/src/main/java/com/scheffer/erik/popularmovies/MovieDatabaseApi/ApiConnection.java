@@ -64,6 +64,7 @@ public class ApiConnection {
 
     private static List<Movie> extractMoviesList(String result) throws JSONException {
         Gson gson = new GsonBuilder()
+                .setDateFormat("yyyy-MM-dd")
                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                 .create();
 
