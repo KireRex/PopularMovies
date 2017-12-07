@@ -80,10 +80,15 @@ public class MovieListActivity extends AppCompatActivity {
                 return ApiConnection.getMovies(criteria);
             } catch (IOException e) {
                 e.printStackTrace();
-                Toast.makeText(MovieListActivity.this,
-                               "Unable to retrieve movie data",
-                               Toast.LENGTH_LONG)
-                     .show();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(MovieListActivity.this,
+                                       getResources().getString(R.string.retrieve_data_error),
+                                       Toast.LENGTH_LONG)
+                             .show();
+                    }
+                });
                 return new ArrayList<>();
             }
         }

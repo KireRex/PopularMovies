@@ -3,6 +3,7 @@
 
     <!--MovieListActivity-->
     <string name="no_movies_text">Unable to retrieve any movie</string>
+    <string name="retrieve_data_error">Unable to retrieve movie data</string>
 
     <!--MovieDetailsActivity-->
     <string name="rating_label">Rating:</string>

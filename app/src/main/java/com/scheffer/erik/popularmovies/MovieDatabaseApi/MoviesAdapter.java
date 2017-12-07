@@ -14,6 +14,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import static com.scheffer.erik.popularmovies.MovieDatabaseApi.ApiConstants.MOVIES_DATABASE_BASE_POSTER_URL;
+
 public class MoviesAdapter extends ArrayAdapter<Movie> {
     public MoviesAdapter(@NonNull Context context, List<Movie> movies) {
         super(context, 0, movies);
@@ -29,7 +31,7 @@ public class MoviesAdapter extends ArrayAdapter<Movie> {
         Movie movie = getItem(position);
         if (movie != null) {
             Picasso.with(getContext())
-                    .load("http://image.tmdb.org/t/p/w500//" + movie.getPosterPath())
+                    .load(MOVIES_DATABASE_BASE_POSTER_URL + "w500//" + movie.getPosterPath())
                     .into((ImageView) convertView.findViewById(R.id.movie_poster));
         }
 

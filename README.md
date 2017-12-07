@@ -1,0 +1,1 @@
+The Movie Database API key must be added to the MOVIES_DATABASE_API_KEY variable on class ApiConstants before build
