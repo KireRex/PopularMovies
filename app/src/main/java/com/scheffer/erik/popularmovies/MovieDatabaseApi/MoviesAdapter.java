@@ -31,7 +31,7 @@ public class MoviesAdapter extends ArrayAdapter<Movie> {
         Movie movie = getItem(position);
         if (movie != null) {
             Picasso.with(getContext())
-                    .load(MOVIES_DATABASE_BASE_POSTER_URL + "w500//" + movie.getPosterPath())
+                    .load(MOVIES_DATABASE_BASE_POSTER_URL + "w780//" + movie.getPosterPath())
                     .into((ImageView) convertView.findViewById(R.id.movie_poster));
         }
 
