@@ -9,6 +9,10 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        // Add the movie database api key to the gradle.properties file like
+        // MOVIE_API_KEY="<your key>"
+        buildConfigField("String", "MOVIE_API_KEY", MOVIE_API_KEY)
     }
     buildTypes {
         release {
