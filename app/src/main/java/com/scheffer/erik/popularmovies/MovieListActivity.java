@@ -14,6 +14,7 @@ import com.scheffer.erik.popularmovies.MovieDatabaseApi.Movie;
 import com.scheffer.erik.popularmovies.MovieDatabaseApi.MoviesAdapter;
 import com.scheffer.erik.popularmovies.MovieDatabaseApi.SearchCriteria;
 import com.scheffer.erik.popularmovies.Utils.AsyncTaskCompleteListener;
+import com.scheffer.erik.popularmovies.Utils.ConnectionUtils;
 
 import java.util.List;
 
@@ -56,7 +57,7 @@ public class MovieListActivity extends AppCompatActivity {
             }
         };
 
-        new MoviesDatabaseTask(SearchCriteria.POPULAR, movieTaskListener).execute();
+        exectueMoviesTask(SearchCriteria.POPULAR);
     }
 
     @Override
@@ -69,13 +70,21 @@ public class MovieListActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.most_popular:
-                new MoviesDatabaseTask(SearchCriteria.POPULAR, movieTaskListener).execute();
+                exectueMoviesTask(SearchCriteria.POPULAR);
                 return true;
             case R.id.top_rated:
-                new MoviesDatabaseTask(SearchCriteria.TOP_RATED, movieTaskListener).execute();
+                exectueMoviesTask(SearchCriteria.TOP_RATED);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void exectueMoviesTask(SearchCriteria criteria) {
+        if (ConnectionUtils.isConnected(this)) {
+            new MoviesDatabaseTask(criteria, movieTaskListener).execute();
+        } else {
+            Toast.makeText(this, R.string.no_connection, Toast.LENGTH_SHORT).show();
         }
     }
 }
