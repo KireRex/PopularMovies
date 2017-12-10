@@ -1,4 +1,4 @@
-package com.scheffer.erik.popularmovies.MovieDatabaseApi;
+package com.scheffer.erik.popularmovies.MovieDatabaseApi.Adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;

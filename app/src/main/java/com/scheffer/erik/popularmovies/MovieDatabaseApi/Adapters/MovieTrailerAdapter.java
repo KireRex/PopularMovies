@@ -1,4 +1,4 @@
-package com.scheffer.erik.popularmovies.MovieDatabaseApi;
+package com.scheffer.erik.popularmovies.MovieDatabaseApi.Adapters;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -25,12 +25,6 @@ public class MovieTrailerAdapter extends RecyclerView.Adapter<MovieTrailerAdapte
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                                   .inflate(R.layout.item_trailer, parent, false);
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
         return new ViewHolder(view);
     }
 

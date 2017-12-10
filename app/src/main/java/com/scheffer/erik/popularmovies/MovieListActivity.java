@@ -10,8 +10,8 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import com.scheffer.erik.popularmovies.MovieDatabaseApi.Adapters.MoviesAdapter;
 import com.scheffer.erik.popularmovies.MovieDatabaseApi.DataClasses.Movie;
-import com.scheffer.erik.popularmovies.MovieDatabaseApi.MoviesAdapter;
 import com.scheffer.erik.popularmovies.MovieDatabaseApi.SearchCriteria;
 import com.scheffer.erik.popularmovies.MovieDatabaseApi.Tasks.MoviesDatabaseTask;
 import com.scheffer.erik.popularmovies.Utils.AsyncTaskCompleteListener;
