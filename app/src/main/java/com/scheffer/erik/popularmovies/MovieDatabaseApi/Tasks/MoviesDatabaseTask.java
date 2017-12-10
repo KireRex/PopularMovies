@@ -1,9 +1,9 @@
-package com.scheffer.erik.popularmovies;
+package com.scheffer.erik.popularmovies.MovieDatabaseApi.Tasks;
 
 import android.os.AsyncTask;
 
 import com.scheffer.erik.popularmovies.MovieDatabaseApi.ApiConnection;
-import com.scheffer.erik.popularmovies.MovieDatabaseApi.Movie;
+import com.scheffer.erik.popularmovies.MovieDatabaseApi.DataClasses.Movie;
 import com.scheffer.erik.popularmovies.MovieDatabaseApi.SearchCriteria;
 import com.scheffer.erik.popularmovies.Utils.AsyncTaskCompleteListener;
 
@@ -16,7 +16,8 @@ public class MoviesDatabaseTask extends AsyncTask<Void, Void, List<Movie>> {
 
     private AsyncTaskCompleteListener<List<Movie>> listener;
 
-    MoviesDatabaseTask(SearchCriteria criteria, AsyncTaskCompleteListener<List<Movie>> listener) {
+    public MoviesDatabaseTask(SearchCriteria criteria,
+                              AsyncTaskCompleteListener<List<Movie>> listener) {
         this.criteria = criteria;
         this.listener = listener;
     }

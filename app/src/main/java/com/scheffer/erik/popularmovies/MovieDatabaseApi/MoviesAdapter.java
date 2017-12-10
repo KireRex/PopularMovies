@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
+import com.scheffer.erik.popularmovies.MovieDatabaseApi.DataClasses.Movie;
 import com.scheffer.erik.popularmovies.R;
 import com.squareup.picasso.Picasso;
 

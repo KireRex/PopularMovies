@@ -7,6 +7,8 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.scheffer.erik.popularmovies.MovieDatabaseApi.DataClasses.Movie;
+import com.scheffer.erik.popularmovies.MovieDatabaseApi.DataClasses.Trailer;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,12 +31,11 @@ import static com.scheffer.erik.popularmovies.MovieDatabaseApi.ApiConstants.MOVI
 public class ApiConnection {
 
     public static List<Movie> getMovies(SearchCriteria criteria) throws IOException {
-        OkHttpClient client = new OkHttpClient();
-
         Request request = new Request.Builder()
-                .url(buildUrl(criteria))
+                .url(buildMovieListURL(criteria))
                 .build();
 
+        OkHttpClient client = new OkHttpClient();
         Response response = client.newCall(request).execute();
         try {
             ResponseBody r = response.body();
@@ -47,10 +48,28 @@ public class ApiConnection {
         return new ArrayList<>();
     }
 
-    private static URL buildUrl(SearchCriteria criteria) {
-        Uri builtUri = Uri.parse(MOVIES_DATABASE_BASE_URL + criteria.getCriteria()).buildUpon()
-                .appendQueryParameter("api_key", MOVIES_DATABASE_API_KEY)
+    public static List<Trailer> getMovieTrailers(Long movieId) throws IOException {
+        Request request = new Request.Builder()
+                .url(buildTrailersURL(movieId))
                 .build();
+
+        OkHttpClient client = new OkHttpClient();
+        Response response = client.newCall(request).execute();
+        try {
+            ResponseBody r = response.body();
+            if (r != null) {
+                return extractTrailersList(r.string());
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return new ArrayList<>();
+    }
+
+    private static URL buildMovieListURL(SearchCriteria criteria) {
+        Uri builtUri = Uri.parse(MOVIES_DATABASE_BASE_URL + criteria.getCriteria()).buildUpon()
+                          .appendQueryParameter("api_key", MOVIES_DATABASE_API_KEY)
+                          .build();
         URL url = null;
         try {
             Log.i("URL", builtUri.toString());
@@ -63,13 +82,40 @@ public class ApiConnection {
     }
 
     private static List<Movie> extractMoviesList(String result) throws JSONException {
-        Gson gson = new GsonBuilder()
+        Type type = new TypeToken<ArrayList<Movie>>() {}.getType();
+
+        JSONObject jsonObject = new JSONObject(result);
+        Gson gson = buildGson();
+        return gson.fromJson(jsonObject.getJSONArray("results").toString(), type);
+    }
+
+    private static URL buildTrailersURL(Long movieId) {
+        Uri builtUri = Uri.parse(MOVIES_DATABASE_BASE_URL + movieId + "/videos").buildUpon()
+                          .appendQueryParameter("api_key", MOVIES_DATABASE_API_KEY)
+                          .build();
+        URL url = null;
+        try {
+            Log.i("URL", builtUri.toString());
+            url = new URL(builtUri.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        return url;
+    }
+
+    private static List<Trailer> extractTrailersList(String result) throws JSONException {
+        Type type = new TypeToken<ArrayList<Trailer>>() {}.getType();
+
+        JSONObject jsonObject = new JSONObject(result);
+        Gson gson = buildGson();
+        return gson.fromJson(jsonObject.getJSONArray("results").toString(), type);
+    }
+
+    private static Gson buildGson() {
+        return new GsonBuilder()
                 .setDateFormat("yyyy-MM-dd")
                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                 .create();
-
-        JSONObject jsonObject = new JSONObject(result);
-        Type type = new TypeToken<ArrayList<Movie>>() {}.getType();
-        return gson.fromJson(jsonObject.getJSONArray("results").toString(), type);
     }
 }

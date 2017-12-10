@@ -1,4 +1,4 @@
-package com.scheffer.erik.popularmovies.MovieDatabaseApi;
+package com.scheffer.erik.popularmovies.MovieDatabaseApi.DataClasses;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import java.util.Date;
 
 public class Movie implements Parcelable {
+    private long id;
     private String title;
     private float voteAverage;
     private String overview;
@@ -13,6 +14,7 @@ public class Movie implements Parcelable {
     private Date releaseDate;
 
     private Movie(Parcel in) {
+        id = in.readLong();
         title = in.readString();
         voteAverage = in.readFloat();
         overview = in.readString();
@@ -39,11 +41,20 @@ public class Movie implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(id);
         dest.writeString(title);
         dest.writeFloat(voteAverage);
         dest.writeString(overview);
         dest.writeString(posterPath);
         dest.writeLong(releaseDate.getTime());
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -89,7 +100,8 @@ public class Movie implements Parcelable {
     @Override
     public String toString() {
         return "Movie{" +
-                "title='" + title + '\'' +
+                "id=" + id +
+                ", title='" + title + '\'' +
                 ", voteAverage=" + voteAverage +
                 ", overview='" + overview + '\'' +
                 ", posterPath='" + posterPath + '\'' +

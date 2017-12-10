@@ -9,6 +9,7 @@
     <!--MovieDetailsActivity-->
     <string name="rating_label">Rating:</string>
     <string name="release_date_label">Release Date:</string>
+    <string name="trailers_label">Trailers:</string>
 
     <!--Menu-->
     <string name="most_popular">Most Popular</string>
