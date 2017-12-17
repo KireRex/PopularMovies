@@ -2,7 +2,6 @@ package com.scheffer.erik.popularmovies;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -13,7 +12,6 @@ import android.widget.GridView;
 import android.widget.Toast;
 
 import com.scheffer.erik.popularmovies.database.FavoriteMovieContract;
-import com.scheffer.erik.popularmovies.database.FavoriteMovieDbHelper;
 import com.scheffer.erik.popularmovies.moviedatabaseapi.Adapters.MoviesAdapter;
 import com.scheffer.erik.popularmovies.moviedatabaseapi.DataClasses.Movie;
 import com.scheffer.erik.popularmovies.moviedatabaseapi.SearchCriteria;
@@ -27,18 +25,18 @@ import java.util.List;
 import static com.scheffer.erik.popularmovies.MovieDetailsActivity.MOVIE_EXTRA_NAME;
 
 public class MovieListActivity extends AppCompatActivity {
+    private static final String MOVIES_LIST_KEY = "movies-list";
+    private static final String CRITERIA_KEY = "criteria";
 
     private GridView movieGrid;
     private AsyncTaskCompleteListener<List<Movie>> movieTaskListener;
-    private SQLiteDatabase database;
+    private ArrayList<Movie> movies;
+    private SearchCriteria criteria = SearchCriteria.POPULAR;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_list);
-
-        FavoriteMovieDbHelper dbHelper = new FavoriteMovieDbHelper(this);
-        database = dbHelper.getReadableDatabase();
 
         movieGrid = findViewById(R.id.movie_grid);
         movieGrid.setEmptyView(findViewById(R.id.no_movies_text));
@@ -55,19 +53,40 @@ public class MovieListActivity extends AppCompatActivity {
 
         movieTaskListener = new AsyncTaskCompleteListener<List<Movie>>() {
             @Override
-            public void onTaskComplete(List<Movie> movies) {
-                if (movies.isEmpty()) {
+            public void onTaskComplete(List<Movie> result) {
+                if (result.isEmpty()) {
                     Toast.makeText(MovieListActivity.this,
                                    getResources().getString(R.string.retrieve_data_error),
                                    Toast.LENGTH_LONG)
                          .show();
                 }
+                movies = new ArrayList<>(result);
                 MoviesAdapter moviesAdapter = new MoviesAdapter(MovieListActivity.this, movies);
                 movieGrid.setAdapter(moviesAdapter);
             }
         };
+    }
 
-        exectueMoviesTask(SearchCriteria.POPULAR);
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (movies == null || movies.isEmpty() || criteria.equals(SearchCriteria.FAVORITE)) {
+            exectueMoviesTask(criteria);
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putParcelableArrayList(MOVIES_LIST_KEY, movies);
+        outState.putSerializable(CRITERIA_KEY, criteria);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        movies = savedInstanceState.getParcelableArrayList(MOVIES_LIST_KEY);
+        criteria = (SearchCriteria) savedInstanceState.getSerializable(CRITERIA_KEY);
     }
 
     @Override
@@ -80,13 +99,16 @@ public class MovieListActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.most_popular:
-                exectueMoviesTask(SearchCriteria.POPULAR);
+                criteria = SearchCriteria.POPULAR;
+                exectueMoviesTask(criteria);
                 return true;
             case R.id.top_rated:
-                exectueMoviesTask(SearchCriteria.TOP_RATED);
+                criteria = SearchCriteria.TOP_RATED;
+                exectueMoviesTask(criteria);
                 return true;
             case R.id.favorites:
-                getFavoriteMovies();
+                criteria = SearchCriteria.FAVORITE;
+                exectueMoviesTask(criteria);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -94,10 +116,14 @@ public class MovieListActivity extends AppCompatActivity {
     }
 
     private void exectueMoviesTask(SearchCriteria criteria) {
-        if (ConnectionUtils.isConnected(this)) {
-            new MoviesDatabaseTask(criteria, movieTaskListener).execute();
+        if (criteria.equals(SearchCriteria.FAVORITE)) {
+            getFavoriteMovies();
         } else {
-            Toast.makeText(this, R.string.no_connection, Toast.LENGTH_SHORT).show();
+            if (ConnectionUtils.isConnected(this)) {
+                new MoviesDatabaseTask(criteria, movieTaskListener).execute();
+            } else {
+                Toast.makeText(this, R.string.no_connection, Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -107,7 +133,7 @@ public class MovieListActivity extends AppCompatActivity {
                                                    null,
                                                    null,
                                                    null);
-        List<Movie> favorites = new ArrayList<>();
+        ArrayList<Movie> favorites = new ArrayList<>();
         if (cursor != null) {
             for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
                 favorites.add(new Movie(cursor));
@@ -115,6 +141,7 @@ public class MovieListActivity extends AppCompatActivity {
             cursor.close();
         }
 
-        movieTaskListener.onTaskComplete(favorites);
+        movies = favorites;
+        movieTaskListener.onTaskComplete(movies);
     }
 }

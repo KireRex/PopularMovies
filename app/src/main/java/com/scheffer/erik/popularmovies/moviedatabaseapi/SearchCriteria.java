@@ -1,7 +1,7 @@
 package com.scheffer.erik.popularmovies.moviedatabaseapi;
 
 public enum SearchCriteria {
-    POPULAR("popular"), TOP_RATED("top_rated");
+    POPULAR("popular"), TOP_RATED("top_rated"), FAVORITE("favorite");
 
     private final String criteriaValue;
 
