@@ -4,7 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.scheffer.erik.popularmovies.database.FavoriteMovieContracts.MovieEntry;
+import com.scheffer.erik.popularmovies.database.FavoriteMovieContract.MovieEntry;
 
 public class FavoriteMovieDbHelper extends SQLiteOpenHelper {
 

@@ -1,7 +1,9 @@
 package com.scheffer.erik.popularmovies;
 
+import android.content.ContentUris;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
@@ -13,7 +15,7 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.scheffer.erik.popularmovies.database.FavoriteMovieContracts;
+import com.scheffer.erik.popularmovies.database.FavoriteMovieContract;
 import com.scheffer.erik.popularmovies.database.FavoriteMovieDbHelper;
 import com.scheffer.erik.popularmovies.moviedatabaseapi.Adapters.MovieReviewAdapter;
 import com.scheffer.erik.popularmovies.moviedatabaseapi.Adapters.MovieTrailerAdapter;
@@ -133,32 +135,42 @@ public class MovieDetailsActivity extends AppCompatActivity {
     }
 
     private void saveFavoriteMovie() {
-        favoriteMovieDatabaseId = database.insert(FavoriteMovieContracts.MovieEntry.TABLE_NAME,
-                                                  null,
-                                                  movie.asContentValues());
+        Uri uri = getContentResolver().insert(FavoriteMovieContract.MovieEntry.CONTENT_URI,
+                                              movie.asContentValues());
+        favoriteMovieDatabaseId = ContentUris.parseId(uri);
     }
 
     private void deleteFavoriteMovie() {
-        int deleteds = database.delete(FavoriteMovieContracts.MovieEntry.TABLE_NAME,
-                                       FavoriteMovieContracts.MovieEntry._ID + "=?",
-                                       new String[]{String.valueOf(favoriteMovieDatabaseId)});
+        int deleteds = getContentResolver()
+                .delete(FavoriteMovieContract.MovieEntry.CONTENT_URI.buildUpon()
+                                                                    .appendPath(
+                                                                            String.valueOf(
+                                                                                    favoriteMovieDatabaseId))
+                                                                    .build(),
+                        null,
+                        null);
         if (deleteds > 0) {
             favoriteMovieDatabaseId = -1;
         }
     }
 
     private void getFavoriteMovieId() {
-        Cursor cursor = database.query(FavoriteMovieContracts.MovieEntry.TABLE_NAME,
-                                       null,
-                                       FavoriteMovieContracts.MovieEntry.COLUMN_EXTERNAL_ID + "=?",
-                                       new String[]{String.valueOf(movie.getId())},
-                                       null,
-                                       null,
-                                       null);
-        if (cursor.getCount() > 0) {
-            cursor.moveToFirst();
-            favoriteMovieDatabaseId = cursor.getLong(cursor.getColumnIndex(FavoriteMovieContracts.MovieEntry._ID));
+        Cursor cursor = getContentResolver()
+                .query(FavoriteMovieContract.MovieEntry.CONTENT_URI.buildUpon()
+                                                                   .appendPath(
+                                                                           String.valueOf(
+                                                                                   movie.getId()))
+                                                                   .build(),
+                       null,
+                       null,
+                       null,
+                       null);
+        if (cursor != null) {
+            if (cursor.getCount() > 0) {
+                cursor.moveToFirst();
+                favoriteMovieDatabaseId = cursor.getLong(cursor.getColumnIndex(FavoriteMovieContract.MovieEntry._ID));
+            }
+            cursor.close();
         }
-        cursor.close();
     }
 }

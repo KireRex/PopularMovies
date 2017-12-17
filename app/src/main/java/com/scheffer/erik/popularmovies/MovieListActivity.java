@@ -12,7 +12,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
-import com.scheffer.erik.popularmovies.database.FavoriteMovieContracts;
+import com.scheffer.erik.popularmovies.database.FavoriteMovieContract;
 import com.scheffer.erik.popularmovies.database.FavoriteMovieDbHelper;
 import com.scheffer.erik.popularmovies.moviedatabaseapi.Adapters.MoviesAdapter;
 import com.scheffer.erik.popularmovies.moviedatabaseapi.DataClasses.Movie;
@@ -102,18 +102,18 @@ public class MovieListActivity extends AppCompatActivity {
     }
 
     private void getFavoriteMovies() {
-        Cursor cursor = database.query(FavoriteMovieContracts.MovieEntry.TABLE_NAME,
-                                       null,
-                                       null,
-                                       null,
-                                       null,
-                                       null,
-                                       null);
+        Cursor cursor = getContentResolver().query(FavoriteMovieContract.MovieEntry.CONTENT_URI,
+                                                   null,
+                                                   null,
+                                                   null,
+                                                   null);
         List<Movie> favorites = new ArrayList<>();
-        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-            favorites.add(new Movie(cursor));
+        if (cursor != null) {
+            for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+                favorites.add(new Movie(cursor));
+            }
+            cursor.close();
         }
-        cursor.close();
 
         movieTaskListener.onTaskComplete(favorites);
     }

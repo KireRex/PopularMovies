@@ -5,7 +5,7 @@ import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.scheffer.erik.popularmovies.database.FavoriteMovieContracts;
+import com.scheffer.erik.popularmovies.database.FavoriteMovieContract;
 
 import java.util.Date;
 
@@ -18,12 +18,12 @@ public class Movie implements Parcelable {
     private Date releaseDate;
 
     public Movie(Cursor cursor) {
-        id = cursor.getLong(cursor.getColumnIndex(FavoriteMovieContracts.MovieEntry.COLUMN_EXTERNAL_ID));
-        title = cursor.getString(cursor.getColumnIndex(FavoriteMovieContracts.MovieEntry.COLUMN_TITLE));
-        voteAverage = cursor.getFloat(cursor.getColumnIndex(FavoriteMovieContracts.MovieEntry.COLUMN_VOTE_AVERAGE));
-        overview = cursor.getString(cursor.getColumnIndex(FavoriteMovieContracts.MovieEntry.COLUMN_OVERVIEW));
-        posterPath = cursor.getString(cursor.getColumnIndex(FavoriteMovieContracts.MovieEntry.COLUMN_POSTER_PATH));
-        releaseDate = new Date(cursor.getLong(cursor.getColumnIndex(FavoriteMovieContracts.MovieEntry.COLUMN_RELEASE_DATE)));
+        id = cursor.getLong(cursor.getColumnIndex(FavoriteMovieContract.MovieEntry.COLUMN_EXTERNAL_ID));
+        title = cursor.getString(cursor.getColumnIndex(FavoriteMovieContract.MovieEntry.COLUMN_TITLE));
+        voteAverage = cursor.getFloat(cursor.getColumnIndex(FavoriteMovieContract.MovieEntry.COLUMN_VOTE_AVERAGE));
+        overview = cursor.getString(cursor.getColumnIndex(FavoriteMovieContract.MovieEntry.COLUMN_OVERVIEW));
+        posterPath = cursor.getString(cursor.getColumnIndex(FavoriteMovieContract.MovieEntry.COLUMN_POSTER_PATH));
+        releaseDate = new Date(cursor.getLong(cursor.getColumnIndex(FavoriteMovieContract.MovieEntry.COLUMN_RELEASE_DATE)));
     }
 
     private Movie(Parcel in) {
@@ -37,12 +37,12 @@ public class Movie implements Parcelable {
 
     public ContentValues asContentValues() {
         ContentValues contentValues = new ContentValues();
-        contentValues.put(FavoriteMovieContracts.MovieEntry.COLUMN_EXTERNAL_ID, id);
-        contentValues.put(FavoriteMovieContracts.MovieEntry.COLUMN_TITLE, title);
-        contentValues.put(FavoriteMovieContracts.MovieEntry.COLUMN_VOTE_AVERAGE, voteAverage);
-        contentValues.put(FavoriteMovieContracts.MovieEntry.COLUMN_OVERVIEW, overview);
-        contentValues.put(FavoriteMovieContracts.MovieEntry.COLUMN_POSTER_PATH, posterPath);
-        contentValues.put(FavoriteMovieContracts.MovieEntry.COLUMN_RELEASE_DATE,
+        contentValues.put(FavoriteMovieContract.MovieEntry.COLUMN_EXTERNAL_ID, id);
+        contentValues.put(FavoriteMovieContract.MovieEntry.COLUMN_TITLE, title);
+        contentValues.put(FavoriteMovieContract.MovieEntry.COLUMN_VOTE_AVERAGE, voteAverage);
+        contentValues.put(FavoriteMovieContract.MovieEntry.COLUMN_OVERVIEW, overview);
+        contentValues.put(FavoriteMovieContract.MovieEntry.COLUMN_POSTER_PATH, posterPath);
+        contentValues.put(FavoriteMovieContract.MovieEntry.COLUMN_RELEASE_DATE,
                           releaseDate.getTime());
         return contentValues;
     }
