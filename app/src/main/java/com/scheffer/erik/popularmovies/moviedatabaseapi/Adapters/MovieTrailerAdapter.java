@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.scheffer.erik.popularmovies.R;
 import com.scheffer.erik.popularmovies.moviedatabaseapi.DataClasses.Trailer;
@@ -53,7 +54,14 @@ public class MovieTrailerAdapter extends RecyclerView.Adapter<MovieTrailerAdapte
                     if (trailer != null) {
                         Intent youtubeActivity =
                                 new Intent(Intent.ACTION_VIEW, buildYoutubeUri(trailer.getKey()));
-                        itemView.getContext().startActivity(youtubeActivity);
+                        if (youtubeActivity.resolveActivity(itemView.getContext()
+                                                                    .getPackageManager()) != null) {
+                            itemView.getContext().startActivity(youtubeActivity);
+                        } else {
+                            Toast.makeText(itemView.getContext(),
+                                           R.string.nothing_to_show_video,
+                                           Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
             });

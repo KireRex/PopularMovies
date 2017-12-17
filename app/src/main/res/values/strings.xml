@@ -11,6 +11,7 @@
     <string name="release_date_label">Release Date:</string>
     <string name="trailers_label">Trailers:</string>
     <string name="reviews_label">Reviews:</string>
+    <string name="nothing_to_show_video">No app was found to show the trailer</string>
 
     <!--ReviewItem-->
     <string name="author_lable">Author:</string>

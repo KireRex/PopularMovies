@@ -2,9 +2,9 @@ package com.scheffer.erik.popularmovies;
 
 import android.content.ContentUris;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,7 +16,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.scheffer.erik.popularmovies.database.FavoriteMovieContract;
-import com.scheffer.erik.popularmovies.database.FavoriteMovieDbHelper;
 import com.scheffer.erik.popularmovies.moviedatabaseapi.Adapters.MovieReviewAdapter;
 import com.scheffer.erik.popularmovies.moviedatabaseapi.Adapters.MovieTrailerAdapter;
 import com.scheffer.erik.popularmovies.moviedatabaseapi.DataClasses.Movie;
@@ -35,12 +34,22 @@ import static com.scheffer.erik.popularmovies.moviedatabaseapi.ApiConstants.MOVI
 
 public class MovieDetailsActivity extends AppCompatActivity {
     public static String MOVIE_EXTRA_NAME = "movie";
+    private static String REVIEWS_STATE_KEY = "reviews-state";
+    private static String TRAILERS_STATE_KEY = "trailers-state";
+    private static String TRAILERS_LIST_KEY = "trailers-list";
+    private static String REVIEWS_LIST_KEY = "reviews-list";
 
     private MovieTrailerAdapter trailerAdapter;
     private MovieReviewAdapter reviewAdapter;
     private Movie movie;
-    private SQLiteDatabase database;
     private long favoriteMovieDatabaseId = -1;
+    private LinearLayoutManager trailersLayoutManager;
+    private LinearLayoutManager reviewsLayoutManager;
+    private Parcelable trailersState;
+    private Parcelable reviewsState;
+
+    private ArrayList<Trailer> trailers;
+    private ArrayList<Review> reviews;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,8 +57,6 @@ public class MovieDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_movie_details);
         movie = getIntent().getParcelableExtra(MOVIE_EXTRA_NAME);
 
-        FavoriteMovieDbHelper dbHelper = new FavoriteMovieDbHelper(this);
-        database = dbHelper.getReadableDatabase();
         getFavoriteMovieId();
 
         Picasso.with(this)
@@ -62,6 +69,11 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 .setText(DateFormat.getDateFormat(this)
                                    .format(movie.getReleaseDate()));
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         setUpTrailersRecyclerView(movie);
         setUpReviewsRecyclerView(movie);
     }
@@ -92,41 +104,91 @@ public class MovieDetailsActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        trailersState = trailersLayoutManager.onSaveInstanceState();
+        reviewsState = reviewsLayoutManager.onSaveInstanceState();
+
+        outState.putParcelable(TRAILERS_STATE_KEY, trailersState);
+        outState.putParcelable(REVIEWS_STATE_KEY, reviewsState);
+        outState.putParcelableArrayList(TRAILERS_LIST_KEY, trailers);
+        outState.putParcelableArrayList(REVIEWS_LIST_KEY, reviews);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        reviewsState = savedInstanceState.getParcelable(REVIEWS_STATE_KEY);
+        trailersState = savedInstanceState.getParcelable(TRAILERS_STATE_KEY);
+        trailers = savedInstanceState.getParcelableArrayList(TRAILERS_LIST_KEY);
+        reviews = savedInstanceState.getParcelableArrayList(REVIEWS_LIST_KEY);
+    }
+
     private void setUpTrailersRecyclerView(Movie movie) {
-        RecyclerView trailersRecyclerView = getRecyclerView(R.id.trailers_list);
-        trailerAdapter = new MovieTrailerAdapter(new ArrayList<Trailer>());
-        trailersRecyclerView.setAdapter(trailerAdapter);
-        if (ConnectionUtils.isConnected(this)) {
-            new MovieTrailersTask(movie.getId(), new AsyncTaskCompleteListener<List<Trailer>>() {
-                @Override
-                public void onTaskComplete(List<Trailer> results) {
-                    trailerAdapter.setTrailers(results);
-                    trailerAdapter.notifyDataSetChanged();
-                }
-            }).execute();
+        if (trailersLayoutManager == null) {
+            trailersLayoutManager = new LinearLayoutManager(this);
         }
+        RecyclerView trailersRecyclerView = getRecyclerView(R.id.trailers_list,
+                                                            trailersLayoutManager);
+        trailerAdapter = new MovieTrailerAdapter(new ArrayList<Trailer>());
+        if (trailers == null) {
+            trailersRecyclerView.setAdapter(trailerAdapter);
+            if (ConnectionUtils.isConnected(this)) {
+                new MovieTrailersTask(movie.getId(),
+                                      new AsyncTaskCompleteListener<List<Trailer>>() {
+                                          @Override
+                                          public void onTaskComplete(List<Trailer> results) {
+                                              trailers = (ArrayList<Trailer>) results;
+                                              trailerAdapter.setTrailers(trailers);
+                                              trailerAdapter.notifyDataSetChanged();
+                                              if (trailersState != null) {
+                                                  trailersLayoutManager.onRestoreInstanceState(
+                                                          trailersState);
+                                              }
+                                          }
+                                      }).execute();
+            }
+        } else {
+            trailerAdapter.setTrailers(trailers);
+            trailersRecyclerView.setAdapter(trailerAdapter);
+        }
+
     }
 
     private void setUpReviewsRecyclerView(Movie movie) {
-        RecyclerView reviewsRecyclerView = getRecyclerView(R.id.reviews_list);
+        if (reviewsLayoutManager == null) {
+            reviewsLayoutManager = new LinearLayoutManager(this);
+        }
+        RecyclerView reviewsRecyclerView = getRecyclerView(R.id.reviews_list, reviewsLayoutManager);
         reviewsRecyclerView.setNestedScrollingEnabled(false);
         reviewAdapter = new MovieReviewAdapter(new ArrayList<Review>());
-        reviewsRecyclerView.setAdapter(reviewAdapter);
-        if (ConnectionUtils.isConnected(this)) {
-            new MovieReviewsTask(movie.getId(), new AsyncTaskCompleteListener<List<Review>>() {
-                @Override
-                public void onTaskComplete(List<Review> results) {
-                    reviewAdapter.setReviews(results);
-                    reviewAdapter.notifyDataSetChanged();
-                }
-            }).execute();
+        if (reviews == null) {
+            reviewsRecyclerView.setAdapter(reviewAdapter);
+            if (ConnectionUtils.isConnected(this)) {
+                new MovieReviewsTask(movie.getId(), new AsyncTaskCompleteListener<List<Review>>() {
+                    @Override
+                    public void onTaskComplete(List<Review> results) {
+                        reviews = (ArrayList<Review>) results;
+                        reviewAdapter.setReviews(reviews);
+                        reviewAdapter.notifyDataSetChanged();
+                        if (reviewsState != null) {
+                            reviewsLayoutManager.onRestoreInstanceState(reviewsState);
+                        }
+                    }
+                }).execute();
+            }
+        } else {
+            reviewAdapter.setReviews(reviews);
+            reviewsRecyclerView.setAdapter(reviewAdapter);
         }
     }
 
-    private RecyclerView getRecyclerView(int recyclerViewId) {
+    private RecyclerView getRecyclerView(int recyclerViewId, LinearLayoutManager layoutManager) {
         RecyclerView reviewsRecyclerView = findViewById(recyclerViewId);
         reviewsRecyclerView.setHasFixedSize(true);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         reviewsRecyclerView.setLayoutManager(layoutManager);
         reviewsRecyclerView.addItemDecoration(
                 new DividerItemDecoration(reviewsRecyclerView.getContext(),
