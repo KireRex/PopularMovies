@@ -1,14 +1,20 @@
 package com.scheffer.erik.popularmovies;
 
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.scheffer.erik.popularmovies.Database.FavoriteMovieContracts;
+import com.scheffer.erik.popularmovies.Database.FavoriteMovieDbHelper;
 import com.scheffer.erik.popularmovies.MovieDatabaseApi.Adapters.MovieReviewAdapter;
 import com.scheffer.erik.popularmovies.MovieDatabaseApi.Adapters.MovieTrailerAdapter;
 import com.scheffer.erik.popularmovies.MovieDatabaseApi.DataClasses.Movie;
@@ -30,12 +36,19 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
     private MovieTrailerAdapter trailerAdapter;
     private MovieReviewAdapter reviewAdapter;
+    private Movie movie;
+    private SQLiteDatabase database;
+    private long favoriteMovieDatabaseId = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_details);
-        Movie movie = getIntent().getParcelableExtra(MOVIE_EXTRA_NAME);
+        movie = getIntent().getParcelableExtra(MOVIE_EXTRA_NAME);
+
+        FavoriteMovieDbHelper dbHelper = new FavoriteMovieDbHelper(this);
+        database = dbHelper.getReadableDatabase();
+        getFavoriteMovieId();
 
         Picasso.with(this)
                .load(MOVIES_DATABASE_BASE_POSTER_URL + "w780//" + movie.getPosterPath())
@@ -49,6 +62,32 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
         setUpTrailersRecyclerView(movie);
         setUpReviewsRecyclerView(movie);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.details_menu, menu);
+        if (favoriteMovieDatabaseId >= 0) {
+            menu.getItem(0).setIcon(R.drawable.ic_star_yellow_48dp);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.favorite_movie:
+                if (favoriteMovieDatabaseId >= 0) {
+                    item.setIcon(R.drawable.ic_star_border_yellow_48dp);
+                    deleteFavoriteMovie();
+                } else {
+                    item.setIcon(R.drawable.ic_star_yellow_48dp);
+                    saveFavoriteMovie();
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void setUpTrailersRecyclerView(Movie movie) {
@@ -91,5 +130,35 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 new DividerItemDecoration(reviewsRecyclerView.getContext(),
                                           layoutManager.getOrientation()));
         return reviewsRecyclerView;
+    }
+
+    private void saveFavoriteMovie() {
+        favoriteMovieDatabaseId = database.insert(FavoriteMovieContracts.MovieEntry.TABLE_NAME,
+                                                  null,
+                                                  movie.asContentValues());
+    }
+
+    private void deleteFavoriteMovie() {
+        int deleteds = database.delete(FavoriteMovieContracts.MovieEntry.TABLE_NAME,
+                                       FavoriteMovieContracts.MovieEntry._ID + "=?",
+                                       new String[]{String.valueOf(favoriteMovieDatabaseId)});
+        if (deleteds > 0) {
+            favoriteMovieDatabaseId = -1;
+        }
+    }
+
+    private void getFavoriteMovieId() {
+        Cursor cursor = database.query(FavoriteMovieContracts.MovieEntry.TABLE_NAME,
+                                       null,
+                                       FavoriteMovieContracts.MovieEntry.COLUMN_EXTERNAL_ID + "=?",
+                                       new String[]{String.valueOf(movie.getId())},
+                                       null,
+                                       null,
+                                       null);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            favoriteMovieDatabaseId = cursor.getLong(cursor.getColumnIndex(FavoriteMovieContracts.MovieEntry._ID));
+        }
+        cursor.close();
     }
 }

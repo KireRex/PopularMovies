@@ -1,6 +1,8 @@
 package com.scheffer.erik.popularmovies;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -10,6 +12,8 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import com.scheffer.erik.popularmovies.Database.FavoriteMovieContracts;
+import com.scheffer.erik.popularmovies.Database.FavoriteMovieDbHelper;
 import com.scheffer.erik.popularmovies.MovieDatabaseApi.Adapters.MoviesAdapter;
 import com.scheffer.erik.popularmovies.MovieDatabaseApi.DataClasses.Movie;
 import com.scheffer.erik.popularmovies.MovieDatabaseApi.SearchCriteria;
@@ -17,6 +21,7 @@ import com.scheffer.erik.popularmovies.MovieDatabaseApi.Tasks.MoviesDatabaseTask
 import com.scheffer.erik.popularmovies.Utils.AsyncTaskCompleteListener;
 import com.scheffer.erik.popularmovies.Utils.ConnectionUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.scheffer.erik.popularmovies.MovieDetailsActivity.MOVIE_EXTRA_NAME;
@@ -25,11 +30,15 @@ public class MovieListActivity extends AppCompatActivity {
 
     private GridView movieGrid;
     private AsyncTaskCompleteListener<List<Movie>> movieTaskListener;
+    private SQLiteDatabase database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_list);
+
+        FavoriteMovieDbHelper dbHelper = new FavoriteMovieDbHelper(this);
+        database = dbHelper.getReadableDatabase();
 
         movieGrid = findViewById(R.id.movie_grid);
         movieGrid.setEmptyView(findViewById(R.id.no_movies_text));
@@ -76,6 +85,9 @@ public class MovieListActivity extends AppCompatActivity {
             case R.id.top_rated:
                 exectueMoviesTask(SearchCriteria.TOP_RATED);
                 return true;
+            case R.id.favorites:
+                getFavoriteMovies();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -87,5 +99,22 @@ public class MovieListActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, R.string.no_connection, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void getFavoriteMovies() {
+        Cursor cursor = database.query(FavoriteMovieContracts.MovieEntry.TABLE_NAME,
+                                       null,
+                                       null,
+                                       null,
+                                       null,
+                                       null,
+                                       null);
+        List<Movie> favorites = new ArrayList<>();
+        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            favorites.add(new Movie(cursor));
+        }
+        cursor.close();
+
+        movieTaskListener.onTaskComplete(favorites);
     }
 }

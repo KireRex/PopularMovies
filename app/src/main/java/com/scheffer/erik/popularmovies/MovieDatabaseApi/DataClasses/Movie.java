@@ -1,7 +1,11 @@
 package com.scheffer.erik.popularmovies.MovieDatabaseApi.DataClasses;
 
+import android.content.ContentValues;
+import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import com.scheffer.erik.popularmovies.Database.FavoriteMovieContracts;
 
 import java.util.Date;
 
@@ -13,6 +17,15 @@ public class Movie implements Parcelable {
     private String posterPath;
     private Date releaseDate;
 
+    public Movie(Cursor cursor) {
+        id = cursor.getLong(cursor.getColumnIndex(FavoriteMovieContracts.MovieEntry.COLUMN_EXTERNAL_ID));
+        title = cursor.getString(cursor.getColumnIndex(FavoriteMovieContracts.MovieEntry.COLUMN_TITLE));
+        voteAverage = cursor.getFloat(cursor.getColumnIndex(FavoriteMovieContracts.MovieEntry.COLUMN_VOTE_AVERAGE));
+        overview = cursor.getString(cursor.getColumnIndex(FavoriteMovieContracts.MovieEntry.COLUMN_OVERVIEW));
+        posterPath = cursor.getString(cursor.getColumnIndex(FavoriteMovieContracts.MovieEntry.COLUMN_POSTER_PATH));
+        releaseDate = new Date(cursor.getLong(cursor.getColumnIndex(FavoriteMovieContracts.MovieEntry.COLUMN_RELEASE_DATE)));
+    }
+
     private Movie(Parcel in) {
         id = in.readLong();
         title = in.readString();
@@ -20,6 +33,18 @@ public class Movie implements Parcelable {
         overview = in.readString();
         posterPath = in.readString();
         releaseDate = new Date(in.readLong());
+    }
+
+    public ContentValues asContentValues() {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(FavoriteMovieContracts.MovieEntry.COLUMN_EXTERNAL_ID, id);
+        contentValues.put(FavoriteMovieContracts.MovieEntry.COLUMN_TITLE, title);
+        contentValues.put(FavoriteMovieContracts.MovieEntry.COLUMN_VOTE_AVERAGE, voteAverage);
+        contentValues.put(FavoriteMovieContracts.MovieEntry.COLUMN_OVERVIEW, overview);
+        contentValues.put(FavoriteMovieContracts.MovieEntry.COLUMN_POSTER_PATH, posterPath);
+        contentValues.put(FavoriteMovieContracts.MovieEntry.COLUMN_RELEASE_DATE,
+                          releaseDate.getTime());
+        return contentValues;
     }
 
     public static final Creator<Movie> CREATOR = new Creator<Movie>() {

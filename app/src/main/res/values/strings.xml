@@ -18,6 +18,8 @@
     <!--Menu-->
     <string name="most_popular">Most Popular</string>
     <string name="top_rated">Top Rated</string>
+    <string name="favorites">Favorites</string>
+    <string name="favorite_action">Favorite</string>
 
     <!--Image Description-->
     <string name="movie_poster">Movie Poster</string>
