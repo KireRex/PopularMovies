@@ -106,8 +106,6 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-
         trailersState = trailersLayoutManager.onSaveInstanceState();
         reviewsState = reviewsLayoutManager.onSaveInstanceState();
 
@@ -115,6 +113,8 @@ public class MovieDetailsActivity extends AppCompatActivity {
         outState.putParcelable(REVIEWS_STATE_KEY, reviewsState);
         outState.putParcelableArrayList(TRAILERS_LIST_KEY, trailers);
         outState.putParcelableArrayList(REVIEWS_LIST_KEY, reviews);
+
+        super.onSaveInstanceState(outState);
     }
 
     @Override
