@@ -1,4 +1,4 @@
-package com.scheffer.erik.popularmovies.MovieDatabaseApi.Adapters;
+package com.scheffer.erik.popularmovies.moviedatabaseapi.Adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -9,13 +9,13 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
-import com.scheffer.erik.popularmovies.MovieDatabaseApi.DataClasses.Movie;
 import com.scheffer.erik.popularmovies.R;
+import com.scheffer.erik.popularmovies.moviedatabaseapi.DataClasses.Movie;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import static com.scheffer.erik.popularmovies.MovieDatabaseApi.ApiConstants.MOVIES_DATABASE_BASE_POSTER_URL;
+import static com.scheffer.erik.popularmovies.moviedatabaseapi.ApiConstants.MOVIES_DATABASE_BASE_POSTER_URL;
 
 public class MoviesAdapter extends ArrayAdapter<Movie> {
     public MoviesAdapter(@NonNull Context context, List<Movie> movies) {

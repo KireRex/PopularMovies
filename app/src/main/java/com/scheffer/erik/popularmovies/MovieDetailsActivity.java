@@ -13,23 +13,23 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.scheffer.erik.popularmovies.Database.FavoriteMovieContracts;
-import com.scheffer.erik.popularmovies.Database.FavoriteMovieDbHelper;
-import com.scheffer.erik.popularmovies.MovieDatabaseApi.Adapters.MovieReviewAdapter;
-import com.scheffer.erik.popularmovies.MovieDatabaseApi.Adapters.MovieTrailerAdapter;
-import com.scheffer.erik.popularmovies.MovieDatabaseApi.DataClasses.Movie;
-import com.scheffer.erik.popularmovies.MovieDatabaseApi.DataClasses.Review;
-import com.scheffer.erik.popularmovies.MovieDatabaseApi.DataClasses.Trailer;
-import com.scheffer.erik.popularmovies.MovieDatabaseApi.Tasks.MovieReviewsTask;
-import com.scheffer.erik.popularmovies.MovieDatabaseApi.Tasks.MovieTrailersTask;
-import com.scheffer.erik.popularmovies.Utils.AsyncTaskCompleteListener;
-import com.scheffer.erik.popularmovies.Utils.ConnectionUtils;
+import com.scheffer.erik.popularmovies.database.FavoriteMovieContracts;
+import com.scheffer.erik.popularmovies.database.FavoriteMovieDbHelper;
+import com.scheffer.erik.popularmovies.moviedatabaseapi.Adapters.MovieReviewAdapter;
+import com.scheffer.erik.popularmovies.moviedatabaseapi.Adapters.MovieTrailerAdapter;
+import com.scheffer.erik.popularmovies.moviedatabaseapi.DataClasses.Movie;
+import com.scheffer.erik.popularmovies.moviedatabaseapi.DataClasses.Review;
+import com.scheffer.erik.popularmovies.moviedatabaseapi.DataClasses.Trailer;
+import com.scheffer.erik.popularmovies.moviedatabaseapi.Tasks.MovieReviewsTask;
+import com.scheffer.erik.popularmovies.moviedatabaseapi.Tasks.MovieTrailersTask;
+import com.scheffer.erik.popularmovies.utils.AsyncTaskCompleteListener;
+import com.scheffer.erik.popularmovies.utils.ConnectionUtils;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.scheffer.erik.popularmovies.MovieDatabaseApi.ApiConstants.MOVIES_DATABASE_BASE_POSTER_URL;
+import static com.scheffer.erik.popularmovies.moviedatabaseapi.ApiConstants.MOVIES_DATABASE_BASE_POSTER_URL;
 
 public class MovieDetailsActivity extends AppCompatActivity {
     public static String MOVIE_EXTRA_NAME = "movie";

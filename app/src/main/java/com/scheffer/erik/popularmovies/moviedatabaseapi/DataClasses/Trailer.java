@@ -1,4 +1,4 @@
-package com.scheffer.erik.popularmovies.MovieDatabaseApi.DataClasses;
+package com.scheffer.erik.popularmovies.moviedatabaseapi.DataClasses;
 
 public class Trailer {
     private String id;

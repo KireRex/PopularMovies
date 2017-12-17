@@ -12,14 +12,14 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
-import com.scheffer.erik.popularmovies.Database.FavoriteMovieContracts;
-import com.scheffer.erik.popularmovies.Database.FavoriteMovieDbHelper;
-import com.scheffer.erik.popularmovies.MovieDatabaseApi.Adapters.MoviesAdapter;
-import com.scheffer.erik.popularmovies.MovieDatabaseApi.DataClasses.Movie;
-import com.scheffer.erik.popularmovies.MovieDatabaseApi.SearchCriteria;
-import com.scheffer.erik.popularmovies.MovieDatabaseApi.Tasks.MoviesDatabaseTask;
-import com.scheffer.erik.popularmovies.Utils.AsyncTaskCompleteListener;
-import com.scheffer.erik.popularmovies.Utils.ConnectionUtils;
+import com.scheffer.erik.popularmovies.database.FavoriteMovieContracts;
+import com.scheffer.erik.popularmovies.database.FavoriteMovieDbHelper;
+import com.scheffer.erik.popularmovies.moviedatabaseapi.Adapters.MoviesAdapter;
+import com.scheffer.erik.popularmovies.moviedatabaseapi.DataClasses.Movie;
+import com.scheffer.erik.popularmovies.moviedatabaseapi.SearchCriteria;
+import com.scheffer.erik.popularmovies.moviedatabaseapi.Tasks.MoviesDatabaseTask;
+import com.scheffer.erik.popularmovies.utils.AsyncTaskCompleteListener;
+import com.scheffer.erik.popularmovies.utils.ConnectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.scheffer.erik.popularmovies.MovieDatabaseApi;
+package com.scheffer.erik.popularmovies.moviedatabaseapi;
 
 import android.net.Uri;
 
@@ -6,9 +6,9 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.scheffer.erik.popularmovies.MovieDatabaseApi.DataClasses.Movie;
-import com.scheffer.erik.popularmovies.MovieDatabaseApi.DataClasses.Review;
-import com.scheffer.erik.popularmovies.MovieDatabaseApi.DataClasses.Trailer;
+import com.scheffer.erik.popularmovies.moviedatabaseapi.DataClasses.Movie;
+import com.scheffer.erik.popularmovies.moviedatabaseapi.DataClasses.Review;
+import com.scheffer.erik.popularmovies.moviedatabaseapi.DataClasses.Trailer;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,8 +25,8 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
-import static com.scheffer.erik.popularmovies.MovieDatabaseApi.ApiConstants.MOVIES_DATABASE_API_KEY;
-import static com.scheffer.erik.popularmovies.MovieDatabaseApi.ApiConstants.MOVIES_DATABASE_BASE_URL;
+import static com.scheffer.erik.popularmovies.moviedatabaseapi.ApiConstants.MOVIES_DATABASE_API_KEY;
+import static com.scheffer.erik.popularmovies.moviedatabaseapi.ApiConstants.MOVIES_DATABASE_BASE_URL;
 
 public class ApiConnection {
 

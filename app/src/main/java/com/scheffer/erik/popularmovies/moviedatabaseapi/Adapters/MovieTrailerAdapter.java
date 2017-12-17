@@ -1,4 +1,4 @@
-package com.scheffer.erik.popularmovies.MovieDatabaseApi.Adapters;
+package com.scheffer.erik.popularmovies.moviedatabaseapi.Adapters;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -8,8 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.scheffer.erik.popularmovies.MovieDatabaseApi.DataClasses.Trailer;
 import com.scheffer.erik.popularmovies.R;
+import com.scheffer.erik.popularmovies.moviedatabaseapi.DataClasses.Trailer;
 
 import java.util.List;
 

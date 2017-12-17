@@ -1,4 +1,4 @@
-package com.scheffer.erik.popularmovies.Utils;
+package com.scheffer.erik.popularmovies.utils;
 
 import android.content.Context;
 import android.net.ConnectivityManager;

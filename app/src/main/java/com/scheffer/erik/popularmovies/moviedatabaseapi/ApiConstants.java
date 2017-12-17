@@ -1,4 +1,4 @@
-package com.scheffer.erik.popularmovies.MovieDatabaseApi;
+package com.scheffer.erik.popularmovies.moviedatabaseapi;
 
 import com.scheffer.erik.popularmovies.BuildConfig;
 

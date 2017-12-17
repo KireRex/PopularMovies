@@ -1,4 +1,4 @@
-package com.scheffer.erik.popularmovies.MovieDatabaseApi;
+package com.scheffer.erik.popularmovies.moviedatabaseapi;
 
 public enum SearchCriteria {
     POPULAR("popular"), TOP_RATED("top_rated");

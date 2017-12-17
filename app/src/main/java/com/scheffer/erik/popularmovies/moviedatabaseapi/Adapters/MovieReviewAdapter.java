@@ -1,4 +1,4 @@
-package com.scheffer.erik.popularmovies.MovieDatabaseApi.Adapters;
+package com.scheffer.erik.popularmovies.moviedatabaseapi.Adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -6,8 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.scheffer.erik.popularmovies.MovieDatabaseApi.DataClasses.Review;
 import com.scheffer.erik.popularmovies.R;
+import com.scheffer.erik.popularmovies.moviedatabaseapi.DataClasses.Review;
 
 import java.util.List;
 

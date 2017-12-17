@@ -1,11 +1,11 @@
-package com.scheffer.erik.popularmovies.MovieDatabaseApi.DataClasses;
+package com.scheffer.erik.popularmovies.moviedatabaseapi.DataClasses;
 
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.scheffer.erik.popularmovies.Database.FavoriteMovieContracts;
+import com.scheffer.erik.popularmovies.database.FavoriteMovieContracts;
 
 import java.util.Date;
 

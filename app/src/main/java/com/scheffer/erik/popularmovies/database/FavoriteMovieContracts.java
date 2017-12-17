@@ -1,4 +1,4 @@
-package com.scheffer.erik.popularmovies.Database;
+package com.scheffer.erik.popularmovies.database;
 
 import android.provider.BaseColumns;
 
