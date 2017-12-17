@@ -141,7 +141,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
                                       new AsyncTaskCompleteListener<List<Trailer>>() {
                                           @Override
                                           public void onTaskComplete(List<Trailer> results) {
-                                              trailers = (ArrayList<Trailer>) results;
+                                              trailers = new ArrayList<>(results);
                                               trailerAdapter.setTrailers(trailers);
                                               trailerAdapter.notifyDataSetChanged();
                                               if (trailersState != null) {
@@ -171,7 +171,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 new MovieReviewsTask(movie.getId(), new AsyncTaskCompleteListener<List<Review>>() {
                     @Override
                     public void onTaskComplete(List<Review> results) {
-                        reviews = (ArrayList<Review>) results;
+                        reviews = new ArrayList<>(results);
                         reviewAdapter.setReviews(reviews);
                         reviewAdapter.notifyDataSetChanged();
                         if (reviewsState != null) {
