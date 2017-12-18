@@ -72,6 +72,8 @@ public class MovieListActivity extends AppCompatActivity {
         super.onResume();
         if (movies == null || movies.isEmpty() || criteria.equals(SearchCriteria.FAVORITE)) {
             exectueMoviesTask(criteria);
+        } else {
+            movieTaskListener.onTaskComplete(movies);
         }
     }
 
