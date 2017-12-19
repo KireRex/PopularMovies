@@ -3,6 +3,7 @@ package com.scheffer.erik.popularmovies;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,11 +29,13 @@ import static com.scheffer.erik.popularmovies.MovieDetailsActivity.MOVIE_EXTRA_N
 public class MovieListActivity extends AppCompatActivity {
     private static final String MOVIES_LIST_KEY = "movies-list";
     private static final String CRITERIA_KEY = "criteria";
+    private static final String GRID_STATE_KEY = "grid-state";
 
     private GridView movieGrid;
     private AsyncTaskCompleteListener<List<Movie>> movieTaskListener;
     private ArrayList<Movie> movies;
     private SearchCriteria criteria = SearchCriteria.POPULAR;
+    private Parcelable gridState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +67,9 @@ public class MovieListActivity extends AppCompatActivity {
                 movies = new ArrayList<>(result);
                 MoviesAdapter moviesAdapter = new MoviesAdapter(MovieListActivity.this, movies);
                 movieGrid.setAdapter(moviesAdapter);
+                if (gridState != null) {
+                    movieGrid.onRestoreInstanceState(gridState);
+                }
             }
         };
     }
@@ -82,6 +88,7 @@ public class MovieListActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         outState.putParcelableArrayList(MOVIES_LIST_KEY, movies);
         outState.putSerializable(CRITERIA_KEY, criteria);
+        outState.putParcelable(GRID_STATE_KEY, movieGrid.onSaveInstanceState());
         super.onSaveInstanceState(outState);
     }
 
@@ -90,6 +97,7 @@ public class MovieListActivity extends AppCompatActivity {
         super.onRestoreInstanceState(savedInstanceState);
         movies = savedInstanceState.getParcelableArrayList(MOVIES_LIST_KEY);
         criteria = (SearchCriteria) savedInstanceState.getSerializable(CRITERIA_KEY);
+        gridState = savedInstanceState.getParcelable(GRID_STATE_KEY);
     }
 
     @Override
