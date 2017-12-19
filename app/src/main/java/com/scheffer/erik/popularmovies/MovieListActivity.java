@@ -15,7 +15,7 @@ import android.widget.Toast;
 import com.scheffer.erik.popularmovies.database.FavoriteMovieContract;
 import com.scheffer.erik.popularmovies.moviedatabaseapi.SearchCriteria;
 import com.scheffer.erik.popularmovies.moviedatabaseapi.adapters.MoviesAdapter;
-import com.scheffer.erik.popularmovies.moviedatabaseapi.converter.MovieConverter;
+import com.scheffer.erik.popularmovies.moviedatabaseapi.converter.MovieConverterKt;
 import com.scheffer.erik.popularmovies.moviedatabaseapi.dataclasses.Movie;
 import com.scheffer.erik.popularmovies.moviedatabaseapi.tasks.MoviesDatabaseTask;
 import com.scheffer.erik.popularmovies.utils.AsyncTaskCompleteListener;
@@ -147,7 +147,7 @@ public class MovieListActivity extends AppCompatActivity {
         ArrayList<Movie> favorites = new ArrayList<>();
         if (cursor != null) {
             for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-                favorites.add(MovieConverter.fromCursor(cursor));
+                favorites.add(MovieConverterKt.fromCursor(cursor));
             }
             cursor.close();
         }
