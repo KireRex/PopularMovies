@@ -1,10 +1,10 @@
-package com.scheffer.erik.popularmovies.moviedatabaseapi.Tasks;
+package com.scheffer.erik.popularmovies.moviedatabaseapi.tasks;
 
 import android.os.AsyncTask;
 
 import com.scheffer.erik.popularmovies.moviedatabaseapi.ApiConnection;
-import com.scheffer.erik.popularmovies.moviedatabaseapi.DataClasses.Movie;
 import com.scheffer.erik.popularmovies.moviedatabaseapi.SearchCriteria;
+import com.scheffer.erik.popularmovies.moviedatabaseapi.dataclasses.Movie;
 import com.scheffer.erik.popularmovies.utils.AsyncTaskCompleteListener;
 
 import java.io.IOException;

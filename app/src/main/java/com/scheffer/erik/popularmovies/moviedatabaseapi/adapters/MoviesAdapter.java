@@ -1,4 +1,4 @@
-package com.scheffer.erik.popularmovies.moviedatabaseapi.Adapters;
+package com.scheffer.erik.popularmovies.moviedatabaseapi.adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -10,7 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
 import com.scheffer.erik.popularmovies.R;
-import com.scheffer.erik.popularmovies.moviedatabaseapi.DataClasses.Movie;
+import com.scheffer.erik.popularmovies.moviedatabaseapi.dataclasses.Movie;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;

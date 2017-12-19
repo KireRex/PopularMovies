@@ -1,4 +1,4 @@
-package com.scheffer.erik.popularmovies.moviedatabaseapi.DataClasses;
+package com.scheffer.erik.popularmovies.moviedatabaseapi.dataclasses;
 
 import android.os.Parcel;
 import android.os.Parcelable;

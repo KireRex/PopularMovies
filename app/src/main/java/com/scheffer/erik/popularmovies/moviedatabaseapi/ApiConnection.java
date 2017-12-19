@@ -6,9 +6,9 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.scheffer.erik.popularmovies.moviedatabaseapi.DataClasses.Movie;
-import com.scheffer.erik.popularmovies.moviedatabaseapi.DataClasses.Review;
-import com.scheffer.erik.popularmovies.moviedatabaseapi.DataClasses.Trailer;
+import com.scheffer.erik.popularmovies.moviedatabaseapi.dataclasses.Movie;
+import com.scheffer.erik.popularmovies.moviedatabaseapi.dataclasses.Review;
+import com.scheffer.erik.popularmovies.moviedatabaseapi.dataclasses.Trailer;
 
 import org.json.JSONException;
 import org.json.JSONObject;

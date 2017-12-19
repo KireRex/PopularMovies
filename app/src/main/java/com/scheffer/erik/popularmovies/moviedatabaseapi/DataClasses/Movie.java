@@ -1,7 +1,6 @@
-package com.scheffer.erik.popularmovies.moviedatabaseapi.DataClasses;
+package com.scheffer.erik.popularmovies.moviedatabaseapi.dataclasses;
 
 import android.content.ContentValues;
-import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -17,13 +16,18 @@ public class Movie implements Parcelable {
     private String posterPath;
     private Date releaseDate;
 
-    public Movie(Cursor cursor) {
-        id = cursor.getLong(cursor.getColumnIndex(FavoriteMovieContract.MovieEntry.COLUMN_EXTERNAL_ID));
-        title = cursor.getString(cursor.getColumnIndex(FavoriteMovieContract.MovieEntry.COLUMN_TITLE));
-        voteAverage = cursor.getFloat(cursor.getColumnIndex(FavoriteMovieContract.MovieEntry.COLUMN_VOTE_AVERAGE));
-        overview = cursor.getString(cursor.getColumnIndex(FavoriteMovieContract.MovieEntry.COLUMN_OVERVIEW));
-        posterPath = cursor.getString(cursor.getColumnIndex(FavoriteMovieContract.MovieEntry.COLUMN_POSTER_PATH));
-        releaseDate = new Date(cursor.getLong(cursor.getColumnIndex(FavoriteMovieContract.MovieEntry.COLUMN_RELEASE_DATE)));
+    public Movie(long id,
+                 String title,
+                 float voteAverage,
+                 String overview,
+                 String posterPath,
+                 Date releaseDate) {
+        this.id = id;
+        this.title = title;
+        this.voteAverage = voteAverage;
+        this.overview = overview;
+        this.posterPath = posterPath;
+        this.releaseDate = releaseDate;
     }
 
     private Movie(Parcel in) {

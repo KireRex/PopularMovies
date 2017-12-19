@@ -17,6 +17,7 @@
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -25,7 +26,7 @@
             android:parentActivityName=".MovieListActivity" />
 
         <provider
-            android:name="com.scheffer.erik.popularmovies.contentprovider.FavoriteMoviesContentProvider"
+            android:name=".contentprovider.FavoriteMoviesContentProvider"
             android:authorities="com.scheffer.erik.popularmovies"
             android:exported="false" />
 
