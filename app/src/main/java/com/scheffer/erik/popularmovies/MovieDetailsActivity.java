@@ -24,13 +24,13 @@ import com.scheffer.erik.popularmovies.moviedatabaseapi.dataclasses.Trailer;
 import com.scheffer.erik.popularmovies.moviedatabaseapi.tasks.MovieReviewsTask;
 import com.scheffer.erik.popularmovies.moviedatabaseapi.tasks.MovieTrailersTask;
 import com.scheffer.erik.popularmovies.utils.AsyncTaskCompleteListener;
-import com.scheffer.erik.popularmovies.utils.ConnectionUtils;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.scheffer.erik.popularmovies.moviedatabaseapi.ApiConstants.MOVIES_DATABASE_BASE_POSTER_URL;
+import static com.scheffer.erik.popularmovies.utils.ConnectionUtilsKt.isConnected;
 
 public class MovieDetailsActivity extends AppCompatActivity {
     public static String MOVIE_EXTRA_NAME = "movie";
@@ -136,7 +136,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
         trailerAdapter = new MovieTrailerAdapter(new ArrayList<Trailer>());
         if (trailers == null) {
             trailersRecyclerView.setAdapter(trailerAdapter);
-            if (ConnectionUtils.isConnected(this)) {
+            if (isConnected(this)) {
                 new MovieTrailersTask(movie.getId(),
                                       new AsyncTaskCompleteListener<List<Trailer>>() {
                                           @Override
@@ -167,7 +167,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
         reviewAdapter = new MovieReviewAdapter(new ArrayList<Review>());
         if (reviews == null) {
             reviewsRecyclerView.setAdapter(reviewAdapter);
-            if (ConnectionUtils.isConnected(this)) {
+            if (isConnected(this)) {
                 new MovieReviewsTask(movie.getId(), new AsyncTaskCompleteListener<List<Review>>() {
                     @Override
                     public void onTaskComplete(List<Review> results) {
