@@ -7,7 +7,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.AdapterView
-import com.scheffer.erik.popularmovies.MovieDetailsActivity.MOVIE_EXTRA_NAME
+import com.scheffer.erik.popularmovies.MovieDetailsActivity.Companion.MOVIE_EXTRA_NAME
 import com.scheffer.erik.popularmovies.database.FavoriteMovieContract
 import com.scheffer.erik.popularmovies.moviedatabaseapi.ApiConnection
 import com.scheffer.erik.popularmovies.moviedatabaseapi.SearchCriteria
