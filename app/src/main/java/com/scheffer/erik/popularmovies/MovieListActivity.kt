@@ -8,7 +8,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.AdapterView
 import com.raizlabs.android.dbflow.config.FlowManager
-import com.scheffer.erik.popularmovies.MovieDetailsActivity.Companion.MOVIE_EXTRA_NAME
 import com.scheffer.erik.popularmovies.database.getAllMovies
 import com.scheffer.erik.popularmovies.moviedatabaseapi.MovieFacade
 import com.scheffer.erik.popularmovies.moviedatabaseapi.SearchCriteria

@@ -18,12 +18,12 @@ class MovieFacade {
                     val url = request.url()
                             .newBuilder()
                             .addQueryParameter("api_key",
-                                               ApiConstants.MOVIES_DATABASE_API_KEY).build()
+                                               MOVIES_DATABASE_API_KEY).build()
                     request = request.newBuilder().url(url).build()
                     chain.proceed(request)
                 }).build()
         retrofit = Retrofit.Builder()
-                .baseUrl(ApiConstants.MOVIES_DATABASE_BASE_URL)
+                .baseUrl(MOVIES_DATABASE_BASE_URL)
                 .addConverterFactory(
                         GsonConverterFactory.create(
                                 GsonBuilder()

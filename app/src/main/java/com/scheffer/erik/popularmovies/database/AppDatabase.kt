@@ -2,7 +2,7 @@ package com.scheffer.erik.popularmovies.database
 
 import com.raizlabs.android.dbflow.annotation.Database
 
-@Database(version = AppDatabase.VERSION)
-object AppDatabase {
-    const val VERSION = 1
-}
+const val DATABASE_VERSION = 1
+
+@Database(version = DATABASE_VERSION)
+object AppDatabase

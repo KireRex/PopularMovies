@@ -12,7 +12,7 @@ import android.view.MenuItem
 import com.raizlabs.android.dbflow.kotlinextensions.delete
 import com.raizlabs.android.dbflow.kotlinextensions.insert
 import com.scheffer.erik.popularmovies.database.getMovieByExternalId
-import com.scheffer.erik.popularmovies.moviedatabaseapi.ApiConstants.MOVIES_DATABASE_BASE_POSTER_URL
+import com.scheffer.erik.popularmovies.moviedatabaseapi.MOVIES_DATABASE_BASE_POSTER_URL
 import com.scheffer.erik.popularmovies.moviedatabaseapi.MovieFacade
 import com.scheffer.erik.popularmovies.moviedatabaseapi.adapters.MovieReviewAdapter
 import com.scheffer.erik.popularmovies.moviedatabaseapi.adapters.MovieTrailerAdapter
@@ -23,6 +23,12 @@ import kotlinx.android.synthetic.main.activity_movie_details.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+
+const val MOVIE_EXTRA_NAME = "movie"
+const val REVIEWS_STATE_KEY = "reviews-state"
+const val TRAILERS_STATE_KEY = "trailers-state"
+const val TRAILERS_LIST_KEY = "trailers-list"
+const val REVIEWS_LIST_KEY = "reviews-list"
 
 class MovieDetailsActivity : AppCompatActivity() {
 
@@ -181,11 +187,5 @@ class MovieDetailsActivity : AppCompatActivity() {
         return reviewsRecyclerView
     }
 
-    companion object {
-        val MOVIE_EXTRA_NAME = "movie"
-        private val REVIEWS_STATE_KEY = "reviews-state"
-        private val TRAILERS_STATE_KEY = "trailers-state"
-        private val TRAILERS_LIST_KEY = "trailers-list"
-        private val REVIEWS_LIST_KEY = "reviews-list"
-    }
+
 }
