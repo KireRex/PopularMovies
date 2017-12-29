@@ -7,12 +7,12 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.AdapterView
+import com.raizlabs.android.dbflow.config.FlowManager
 import com.scheffer.erik.popularmovies.MovieDetailsActivity.Companion.MOVIE_EXTRA_NAME
-import com.scheffer.erik.popularmovies.database.FavoriteMovieContract
+import com.scheffer.erik.popularmovies.database.getAllMovies
 import com.scheffer.erik.popularmovies.moviedatabaseapi.MovieFacade
 import com.scheffer.erik.popularmovies.moviedatabaseapi.SearchCriteria
 import com.scheffer.erik.popularmovies.moviedatabaseapi.adapters.MoviesAdapter
-import com.scheffer.erik.popularmovies.moviedatabaseapi.converter.fromCursor
 import com.scheffer.erik.popularmovies.moviedatabaseapi.models.Movie
 import com.scheffer.erik.popularmovies.moviedatabaseapi.models.MovieResultList
 import com.scheffer.erik.popularmovies.utils.isConnected
@@ -30,6 +30,8 @@ class MovieListActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        FlowManager.init(applicationContext)
+
         setContentView(R.layout.activity_movie_list)
 
         movie_grid.emptyView = no_movies_text
@@ -113,22 +115,7 @@ class MovieListActivity : AppCompatActivity() {
     }
 
     private fun getFavoriteMovies() {
-        val cursor = contentResolver.query(FavoriteMovieContract.MovieEntry.CONTENT_URI,
-                                           null,
-                                           null,
-                                           null,
-                                           null)
-        movies = ArrayList()
-        cursor?.let {
-            it.moveToFirst()
-            while (!it.isAfterLast) {
-                movies.add(fromCursor(it))
-                it.moveToNext()
-            }
-        }
-        cursor?.close()
-
-        updateAdapter(movies)
+        updateAdapter(getAllMovies() ?: ArrayList())
     }
 
     companion object {

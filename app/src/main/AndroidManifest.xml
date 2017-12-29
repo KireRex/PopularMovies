@@ -25,11 +25,6 @@
             android:name=".MovieDetailsActivity"
             android:parentActivityName=".MovieListActivity" />
 
-        <provider
-            android:name=".contentprovider.FavoriteMoviesContentProvider"
-            android:authorities="com.scheffer.erik.popularmovies"
-            android:exported="false" />
-
     </application>
 
 </manifest>

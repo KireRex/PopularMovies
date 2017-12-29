@@ -1,6 +1,5 @@
 package com.scheffer.erik.popularmovies
 
-import android.content.ContentUris
 import android.os.Bundle
 import android.os.Parcelable
 import android.support.v7.app.AppCompatActivity
@@ -10,12 +9,13 @@ import android.support.v7.widget.RecyclerView
 import android.text.format.DateFormat
 import android.view.Menu
 import android.view.MenuItem
-import com.scheffer.erik.popularmovies.database.FavoriteMovieContract
+import com.raizlabs.android.dbflow.kotlinextensions.delete
+import com.raizlabs.android.dbflow.kotlinextensions.insert
+import com.scheffer.erik.popularmovies.database.getMovieByExternalId
 import com.scheffer.erik.popularmovies.moviedatabaseapi.ApiConstants.MOVIES_DATABASE_BASE_POSTER_URL
 import com.scheffer.erik.popularmovies.moviedatabaseapi.MovieFacade
 import com.scheffer.erik.popularmovies.moviedatabaseapi.adapters.MovieReviewAdapter
 import com.scheffer.erik.popularmovies.moviedatabaseapi.adapters.MovieTrailerAdapter
-import com.scheffer.erik.popularmovies.moviedatabaseapi.converter.toContentValues
 import com.scheffer.erik.popularmovies.moviedatabaseapi.models.*
 import com.scheffer.erik.popularmovies.utils.isConnected
 import com.squareup.picasso.Picasso
@@ -29,7 +29,6 @@ class MovieDetailsActivity : AppCompatActivity() {
     private var trailerAdapter: MovieTrailerAdapter = MovieTrailerAdapter(ArrayList())
     private var reviewAdapter: MovieReviewAdapter = MovieReviewAdapter(ArrayList())
     private lateinit var movie: Movie
-    private var favoriteMovieDatabaseId: Long = -1
     private var trailersLayoutManager: LinearLayoutManager? = null
     private var reviewsLayoutManager: LinearLayoutManager? = null
     private var trailersState: Parcelable? = null
@@ -42,8 +41,7 @@ class MovieDetailsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movie_details)
         movie = intent.getParcelableExtra(MOVIE_EXTRA_NAME)
-
-        getFavoriteMovieId()
+        movie = getMovieByExternalId(movie.id) ?: movie
 
         Picasso.with(this)
                 .load(MOVIES_DATABASE_BASE_POSTER_URL + "w780//" + movie.posterPath)
@@ -62,7 +60,7 @@ class MovieDetailsActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.details_menu, menu)
-        if (favoriteMovieDatabaseId >= 0) {
+        if (movie.databaseId > 0) {
             menu.getItem(0).setIcon(R.drawable.ic_star_yellow_48dp)
         }
         return true
@@ -71,12 +69,12 @@ class MovieDetailsActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.favorite_movie -> {
-                if (favoriteMovieDatabaseId >= 0) {
+                if (movie.databaseId > 0) {
                     item.setIcon(R.drawable.ic_star_border_yellow_48dp)
-                    deleteFavoriteMovie()
+                    movie.delete()
                 } else {
                     item.setIcon(R.drawable.ic_star_yellow_48dp)
-                    saveFavoriteMovie()
+                    movie.insert()
                 }
                 true
             }
@@ -181,38 +179,6 @@ class MovieDetailsActivity : AppCompatActivity() {
                 DividerItemDecoration(reviewsRecyclerView.context,
                                       layoutManager.orientation))
         return reviewsRecyclerView
-    }
-
-    private fun saveFavoriteMovie() {
-        val uri = contentResolver.insert(FavoriteMovieContract.MovieEntry.CONTENT_URI,
-                                         movie.toContentValues())
-        favoriteMovieDatabaseId = ContentUris.parseId(uri)
-    }
-
-    private fun deleteFavoriteMovie() {
-        val deleteds = contentResolver
-                .delete(FavoriteMovieContract.MovieEntry.CONTENT_URI.buildUpon()
-                                .appendPath(
-                                        favoriteMovieDatabaseId.toString())
-                                .build(), null, null)
-        if (deleteds > 0) {
-            favoriteMovieDatabaseId = -1
-        }
-    }
-
-    private fun getFavoriteMovieId() {
-        val cursor = contentResolver
-                .query(FavoriteMovieContract.MovieEntry.CONTENT_URI.buildUpon()
-                               .appendPath(
-                                       movie.id.toString())
-                               .build(), null, null, null, null)
-        if (cursor != null) {
-            if (cursor.count > 0) {
-                cursor.moveToFirst()
-                favoriteMovieDatabaseId = cursor.getLong(cursor.getColumnIndex(FavoriteMovieContract.MovieEntry._ID))
-            }
-            cursor.close()
-        }
     }
 
     companion object {
