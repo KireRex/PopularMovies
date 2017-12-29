@@ -15,6 +15,7 @@ import com.scheffer.erik.popularmovies.moviedatabaseapi.ApiConstants.MOVIES_DATA
 import com.scheffer.erik.popularmovies.moviedatabaseapi.MovieFacade
 import com.scheffer.erik.popularmovies.moviedatabaseapi.adapters.MovieReviewAdapter
 import com.scheffer.erik.popularmovies.moviedatabaseapi.adapters.MovieTrailerAdapter
+import com.scheffer.erik.popularmovies.moviedatabaseapi.converter.toContentValues
 import com.scheffer.erik.popularmovies.moviedatabaseapi.models.*
 import com.scheffer.erik.popularmovies.utils.isConnected
 import com.squareup.picasso.Picasso
@@ -152,7 +153,7 @@ class MovieDetailsActivity : AppCompatActivity() {
                                             response: Response<ReviewResultList?>?) {
                         response?.body()?.results.let {
                             reviews = ArrayList(it)
-                            reviewAdapter.setReviews(reviews)
+                            reviewAdapter.reviews = reviews
                             reviewAdapter.notifyDataSetChanged()
                             if (reviewsState != null) {
                                 reviewsLayoutManager!!.onRestoreInstanceState(reviewsState)
@@ -166,7 +167,7 @@ class MovieDetailsActivity : AppCompatActivity() {
                 })
             }
         } else {
-            reviewAdapter.setReviews(reviews)
+            reviewAdapter.reviews = reviews
             reviewsRecyclerView.adapter = reviewAdapter
         }
     }
@@ -184,7 +185,7 @@ class MovieDetailsActivity : AppCompatActivity() {
 
     private fun saveFavoriteMovie() {
         val uri = contentResolver.insert(FavoriteMovieContract.MovieEntry.CONTENT_URI,
-                                         movie.asContentValues())
+                                         movie.toContentValues())
         favoriteMovieDatabaseId = ContentUris.parseId(uri)
     }
 
