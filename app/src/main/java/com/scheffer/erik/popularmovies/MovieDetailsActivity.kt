@@ -24,12 +24,11 @@ import kotlinx.android.synthetic.main.activity_movie_details.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import java.io.IOException
-import java.util.*
 
 class MovieDetailsActivity : AppCompatActivity() {
 
-    private var trailerAdapter: MovieTrailerAdapter? = null
-    private var reviewAdapter: MovieReviewAdapter? = null
+    private var trailerAdapter: MovieTrailerAdapter = MovieTrailerAdapter(ArrayList())
+    private var reviewAdapter: MovieReviewAdapter = MovieReviewAdapter(ArrayList())
     private lateinit var movie: Movie
     private var favoriteMovieDatabaseId: Long = -1
     private var trailersLayoutManager: LinearLayoutManager? = null
@@ -37,8 +36,8 @@ class MovieDetailsActivity : AppCompatActivity() {
     private var trailersState: Parcelable? = null
     private var reviewsState: Parcelable? = null
 
-    private var trailers: ArrayList<Trailer>? = null
-    private var reviews: ArrayList<Review>? = null
+    private var trailers: ArrayList<Trailer> = ArrayList()
+    private var reviews: ArrayList<Review> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,11 +85,11 @@ class MovieDetailsActivity : AppCompatActivity() {
         }
     }
 
-    override fun onSaveInstanceState(outState: Bundle?) {
+    override fun onSaveInstanceState(outState: Bundle) {
         trailersState = trailersLayoutManager!!.onSaveInstanceState()
         reviewsState = reviewsLayoutManager!!.onSaveInstanceState()
 
-        outState!!.putParcelable(TRAILERS_STATE_KEY, trailersState)
+        outState.putParcelable(TRAILERS_STATE_KEY, trailersState)
         outState.putParcelable(REVIEWS_STATE_KEY, reviewsState)
         outState.putParcelableArrayList(TRAILERS_LIST_KEY, trailers)
         outState.putParcelableArrayList(REVIEWS_LIST_KEY, reviews)
@@ -112,8 +111,7 @@ class MovieDetailsActivity : AppCompatActivity() {
             trailersLayoutManager = LinearLayoutManager(this)
         }
         val trailersRecyclerView = getRecyclerView(R.id.trailers_list, trailersLayoutManager!!)
-        trailerAdapter = MovieTrailerAdapter(ArrayList())
-        if (trailers == null) {
+        if (trailers.isEmpty()) {
             trailersRecyclerView.adapter = trailerAdapter
             if (isConnected(this)) {
                 doAsync {
@@ -127,8 +125,8 @@ class MovieDetailsActivity : AppCompatActivity() {
 
                     uiThread {
                         trailers = ArrayList(result)
-                        trailerAdapter!!.trailers = trailers as ArrayList<Trailer>
-                        trailerAdapter!!.notifyDataSetChanged()
+                        trailerAdapter.trailers = trailers
+                        trailerAdapter.notifyDataSetChanged()
                         trailersState?.let {
                             trailersLayoutManager!!.onRestoreInstanceState(trailersState)
                         }
@@ -136,7 +134,7 @@ class MovieDetailsActivity : AppCompatActivity() {
                 }
             }
         } else {
-            trailerAdapter!!.trailers = trailers as ArrayList<Trailer>
+            trailerAdapter.trailers = trailers
             trailersRecyclerView.adapter = trailerAdapter
         }
 
@@ -148,8 +146,7 @@ class MovieDetailsActivity : AppCompatActivity() {
         }
         val reviewsRecyclerView = getRecyclerView(R.id.reviews_list, reviewsLayoutManager!!)
         reviewsRecyclerView.isNestedScrollingEnabled = false
-        reviewAdapter = MovieReviewAdapter(ArrayList())
-        if (reviews == null) {
+        if (reviews.isEmpty()) {
             reviewsRecyclerView.adapter = reviewAdapter
             if (isConnected(this)) {
                 doAsync {
@@ -163,8 +160,8 @@ class MovieDetailsActivity : AppCompatActivity() {
 
                     uiThread {
                         reviews = ArrayList(result)
-                        reviewAdapter!!.setReviews(reviews!!)
-                        reviewAdapter!!.notifyDataSetChanged()
+                        reviewAdapter.setReviews(reviews)
+                        reviewAdapter.notifyDataSetChanged()
                         if (reviewsState != null) {
                             reviewsLayoutManager!!.onRestoreInstanceState(reviewsState)
                         }
@@ -172,7 +169,7 @@ class MovieDetailsActivity : AppCompatActivity() {
                 }
             }
         } else {
-            reviewAdapter!!.setReviews(reviews!!)
+            reviewAdapter.setReviews(reviews)
             reviewsRecyclerView.adapter = reviewAdapter
         }
     }
