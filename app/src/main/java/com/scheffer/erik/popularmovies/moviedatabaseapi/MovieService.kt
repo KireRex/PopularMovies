@@ -1,8 +1,8 @@
 package com.scheffer.erik.popularmovies.moviedatabaseapi
 
-import com.scheffer.erik.popularmovies.moviedatabaseapi.dataclasses.MovieResultList
-import com.scheffer.erik.popularmovies.moviedatabaseapi.dataclasses.ReviewResultList
-import com.scheffer.erik.popularmovies.moviedatabaseapi.dataclasses.TrailerResultList
+import com.scheffer.erik.popularmovies.moviedatabaseapi.models.MovieResultList
+import com.scheffer.erik.popularmovies.moviedatabaseapi.models.ReviewResultList
+import com.scheffer.erik.popularmovies.moviedatabaseapi.models.TrailerResultList
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path

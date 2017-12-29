@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 
 import com.scheffer.erik.popularmovies.R
-import com.scheffer.erik.popularmovies.moviedatabaseapi.dataclasses.Review
+import com.scheffer.erik.popularmovies.moviedatabaseapi.models.Review
 import kotlinx.android.synthetic.main.item_review.view.*
 
 import ru.noties.markwon.Markwon

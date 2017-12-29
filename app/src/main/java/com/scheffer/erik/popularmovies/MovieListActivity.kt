@@ -13,8 +13,8 @@ import com.scheffer.erik.popularmovies.moviedatabaseapi.MovieFacade
 import com.scheffer.erik.popularmovies.moviedatabaseapi.SearchCriteria
 import com.scheffer.erik.popularmovies.moviedatabaseapi.adapters.MoviesAdapter
 import com.scheffer.erik.popularmovies.moviedatabaseapi.converter.fromCursor
-import com.scheffer.erik.popularmovies.moviedatabaseapi.dataclasses.Movie
-import com.scheffer.erik.popularmovies.moviedatabaseapi.dataclasses.MovieResultList
+import com.scheffer.erik.popularmovies.moviedatabaseapi.models.Movie
+import com.scheffer.erik.popularmovies.moviedatabaseapi.models.MovieResultList
 import com.scheffer.erik.popularmovies.utils.isConnected
 import kotlinx.android.synthetic.main.activity_movie_list.*
 import org.jetbrains.anko.toast

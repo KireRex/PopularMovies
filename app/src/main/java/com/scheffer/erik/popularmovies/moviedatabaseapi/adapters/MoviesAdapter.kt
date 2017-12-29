@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import com.scheffer.erik.popularmovies.R
 import com.scheffer.erik.popularmovies.moviedatabaseapi.ApiConstants.MOVIES_DATABASE_BASE_POSTER_URL
-import com.scheffer.erik.popularmovies.moviedatabaseapi.dataclasses.Movie
+import com.scheffer.erik.popularmovies.moviedatabaseapi.models.Movie
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_movie.view.*
 

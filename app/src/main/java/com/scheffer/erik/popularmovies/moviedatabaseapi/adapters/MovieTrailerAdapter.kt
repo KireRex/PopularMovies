@@ -10,7 +10,7 @@ import android.widget.TextView
 import android.widget.Toast
 
 import com.scheffer.erik.popularmovies.R
-import com.scheffer.erik.popularmovies.moviedatabaseapi.dataclasses.Trailer
+import com.scheffer.erik.popularmovies.moviedatabaseapi.models.Trailer
 import kotlinx.android.synthetic.main.item_trailer.view.*
 
 class MovieTrailerAdapter(var trailers: List<Trailer>)

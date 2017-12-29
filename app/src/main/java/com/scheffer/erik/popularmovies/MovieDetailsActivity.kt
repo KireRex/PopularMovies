@@ -15,7 +15,7 @@ import com.scheffer.erik.popularmovies.moviedatabaseapi.ApiConstants.MOVIES_DATA
 import com.scheffer.erik.popularmovies.moviedatabaseapi.MovieFacade
 import com.scheffer.erik.popularmovies.moviedatabaseapi.adapters.MovieReviewAdapter
 import com.scheffer.erik.popularmovies.moviedatabaseapi.adapters.MovieTrailerAdapter
-import com.scheffer.erik.popularmovies.moviedatabaseapi.dataclasses.*
+import com.scheffer.erik.popularmovies.moviedatabaseapi.models.*
 import com.scheffer.erik.popularmovies.utils.isConnected
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_movie_details.*

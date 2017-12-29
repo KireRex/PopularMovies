@@ -2,7 +2,7 @@ package com.scheffer.erik.popularmovies.moviedatabaseapi.converter
 
 import android.database.Cursor
 import com.scheffer.erik.popularmovies.database.FavoriteMovieContract
-import com.scheffer.erik.popularmovies.moviedatabaseapi.dataclasses.Movie
+import com.scheffer.erik.popularmovies.moviedatabaseapi.models.Movie
 import java.util.*
 
 fun fromCursor(cursor: Cursor): Movie {
