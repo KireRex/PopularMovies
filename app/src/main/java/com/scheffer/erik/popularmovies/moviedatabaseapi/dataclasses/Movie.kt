@@ -26,3 +26,5 @@ data class Movie(val id: Long,
         return contentValues
     }
 }
+
+data class MovieResultList(val results: List<Movie>)

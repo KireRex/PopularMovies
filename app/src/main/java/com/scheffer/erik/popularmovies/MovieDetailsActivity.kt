@@ -11,19 +11,17 @@ import android.text.format.DateFormat
 import android.view.Menu
 import android.view.MenuItem
 import com.scheffer.erik.popularmovies.database.FavoriteMovieContract
-import com.scheffer.erik.popularmovies.moviedatabaseapi.ApiConnection
 import com.scheffer.erik.popularmovies.moviedatabaseapi.ApiConstants.MOVIES_DATABASE_BASE_POSTER_URL
+import com.scheffer.erik.popularmovies.moviedatabaseapi.MovieFacade
 import com.scheffer.erik.popularmovies.moviedatabaseapi.adapters.MovieReviewAdapter
 import com.scheffer.erik.popularmovies.moviedatabaseapi.adapters.MovieTrailerAdapter
-import com.scheffer.erik.popularmovies.moviedatabaseapi.dataclasses.Movie
-import com.scheffer.erik.popularmovies.moviedatabaseapi.dataclasses.Review
-import com.scheffer.erik.popularmovies.moviedatabaseapi.dataclasses.Trailer
+import com.scheffer.erik.popularmovies.moviedatabaseapi.dataclasses.*
 import com.scheffer.erik.popularmovies.utils.isConnected
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_movie_details.*
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
-import java.io.IOException
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class MovieDetailsActivity : AppCompatActivity() {
 
@@ -114,24 +112,23 @@ class MovieDetailsActivity : AppCompatActivity() {
         if (trailers.isEmpty()) {
             trailersRecyclerView.adapter = trailerAdapter
             if (isConnected(this)) {
-                doAsync {
-                    val result =
-                            try {
-                                ApiConnection.getMovieTrailers(movie.id)
-                            } catch (e: IOException) {
-                                e.printStackTrace()
-                                ArrayList<Trailer>()
+                MovieFacade().getMovieTrailers(movie.id).enqueue(object : Callback<TrailerResultList?> {
+                    override fun onResponse(call: Call<TrailerResultList?>?,
+                                            response: Response<TrailerResultList?>?) {
+                        response?.body()?.results.let {
+                            trailers = ArrayList(it)
+                            trailerAdapter.trailers = trailers
+                            trailerAdapter.notifyDataSetChanged()
+                            trailersState?.let {
+                                trailersLayoutManager!!.onRestoreInstanceState(trailersState)
                             }
-
-                    uiThread {
-                        trailers = ArrayList(result)
-                        trailerAdapter.trailers = trailers
-                        trailerAdapter.notifyDataSetChanged()
-                        trailersState?.let {
-                            trailersLayoutManager!!.onRestoreInstanceState(trailersState)
                         }
                     }
-                }
+
+                    override fun onFailure(call: Call<TrailerResultList?>?, t: Throwable?) {
+                        t?.printStackTrace()
+                    }
+                })
             }
         } else {
             trailerAdapter.trailers = trailers
@@ -149,24 +146,24 @@ class MovieDetailsActivity : AppCompatActivity() {
         if (reviews.isEmpty()) {
             reviewsRecyclerView.adapter = reviewAdapter
             if (isConnected(this)) {
-                doAsync {
-                    val result =
-                            try {
-                                ApiConnection.getMovieReviews(movie.id)
-                            } catch (e: IOException) {
-                                e.printStackTrace()
-                                ArrayList<Review>()
-                            }
 
-                    uiThread {
-                        reviews = ArrayList(result)
-                        reviewAdapter.setReviews(reviews)
-                        reviewAdapter.notifyDataSetChanged()
-                        if (reviewsState != null) {
-                            reviewsLayoutManager!!.onRestoreInstanceState(reviewsState)
+                MovieFacade().getMovieReviews(movie.id).enqueue(object : Callback<ReviewResultList?> {
+                    override fun onResponse(call: Call<ReviewResultList?>?,
+                                            response: Response<ReviewResultList?>?) {
+                        response?.body()?.results.let {
+                            reviews = ArrayList(it)
+                            reviewAdapter.setReviews(reviews)
+                            reviewAdapter.notifyDataSetChanged()
+                            if (reviewsState != null) {
+                                reviewsLayoutManager!!.onRestoreInstanceState(reviewsState)
+                            }
                         }
                     }
-                }
+
+                    override fun onFailure(call: Call<ReviewResultList?>?, t: Throwable?) {
+                        t?.printStackTrace()
+                    }
+                })
             }
         } else {
             reviewAdapter.setReviews(reviews)

@@ -9,18 +9,18 @@ import android.view.MenuItem
 import android.widget.AdapterView
 import com.scheffer.erik.popularmovies.MovieDetailsActivity.Companion.MOVIE_EXTRA_NAME
 import com.scheffer.erik.popularmovies.database.FavoriteMovieContract
-import com.scheffer.erik.popularmovies.moviedatabaseapi.ApiConnection
+import com.scheffer.erik.popularmovies.moviedatabaseapi.MovieFacade
 import com.scheffer.erik.popularmovies.moviedatabaseapi.SearchCriteria
 import com.scheffer.erik.popularmovies.moviedatabaseapi.adapters.MoviesAdapter
 import com.scheffer.erik.popularmovies.moviedatabaseapi.converter.fromCursor
 import com.scheffer.erik.popularmovies.moviedatabaseapi.dataclasses.Movie
+import com.scheffer.erik.popularmovies.moviedatabaseapi.dataclasses.MovieResultList
 import com.scheffer.erik.popularmovies.utils.isConnected
 import kotlinx.android.synthetic.main.activity_movie_list.*
-import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.toast
-import org.jetbrains.anko.uiThread
-import java.io.IOException
-import java.util.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class MovieListActivity : AppCompatActivity() {
 
@@ -86,18 +86,16 @@ class MovieListActivity : AppCompatActivity() {
             getFavoriteMovies()
         } else {
             if (isConnected(this)) {
-                doAsync {
-                    val result =
-                            try {
-                                ApiConnection.getMovies(criteria)
-                            } catch (e: IOException) {
-                                e.printStackTrace()
-                                ArrayList<Movie>()
-                            }
-                    uiThread {
-                        updateAdapter(result)
+                MovieFacade().getMovies(criteria).enqueue(object : Callback<MovieResultList?> {
+                    override fun onResponse(call: Call<MovieResultList?>?,
+                                            response: Response<MovieResultList?>?) {
+                        response?.body()?.results?.let { updateAdapter(it) }
                     }
-                }
+
+                    override fun onFailure(call: Call<MovieResultList?>?, t: Throwable?) {
+                        t?.printStackTrace()
+                    }
+                })
             } else {
                 toast(R.string.no_connection)
             }
@@ -127,8 +125,8 @@ class MovieListActivity : AppCompatActivity() {
                 movies.add(fromCursor(it))
                 it.moveToNext()
             }
-            it.close()
         }
+        cursor?.close()
 
         updateAdapter(movies)
     }
