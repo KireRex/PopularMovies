@@ -13,13 +13,8 @@ import com.scheffer.erik.popularmovies.moviedatabaseapi.MovieFacade
 import com.scheffer.erik.popularmovies.moviedatabaseapi.SearchCriteria
 import com.scheffer.erik.popularmovies.moviedatabaseapi.adapters.MoviesAdapter
 import com.scheffer.erik.popularmovies.moviedatabaseapi.models.Movie
-import com.scheffer.erik.popularmovies.moviedatabaseapi.models.MovieResultList
-import com.scheffer.erik.popularmovies.utils.isConnected
 import kotlinx.android.synthetic.main.activity_movie_list.*
 import org.jetbrains.anko.toast
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class MovieListActivity : AppCompatActivity() {
 
@@ -83,24 +78,7 @@ class MovieListActivity : AppCompatActivity() {
     }
 
     private fun executeMoviesTask() {
-        if (criteria == SearchCriteria.FAVORITE) {
-            getFavoriteMovies()
-        } else {
-            if (isConnected(this)) {
-                MovieFacade().getMovies(criteria).enqueue(object : Callback<MovieResultList?> {
-                    override fun onResponse(call: Call<MovieResultList?>?,
-                                            response: Response<MovieResultList?>?) {
-                        response?.body()?.results?.let { updateAdapter(it) }
-                    }
-
-                    override fun onFailure(call: Call<MovieResultList?>?, t: Throwable?) {
-                        t?.printStackTrace()
-                    }
-                })
-            } else {
-                toast(R.string.no_connection)
-            }
-        }
+        MovieFacade().getMovies(criteria, { updateAdapter(it) }, this)
     }
 
     private fun updateAdapter(result: List<Movie>) {
