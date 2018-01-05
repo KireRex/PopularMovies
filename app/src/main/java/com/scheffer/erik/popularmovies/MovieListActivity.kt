@@ -8,25 +8,26 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.AdapterView
 import com.raizlabs.android.dbflow.config.FlowManager
-import com.scheffer.erik.popularmovies.database.getAllMovies
 import com.scheffer.erik.popularmovies.moviedatabaseapi.MovieFacade
 import com.scheffer.erik.popularmovies.moviedatabaseapi.SearchCriteria
 import com.scheffer.erik.popularmovies.moviedatabaseapi.adapters.MoviesAdapter
 import com.scheffer.erik.popularmovies.moviedatabaseapi.models.Movie
+import icepick.Icepick
+import icepick.State
 import kotlinx.android.synthetic.main.activity_movie_list.*
 import org.jetbrains.anko.toast
 
 class MovieListActivity : AppCompatActivity() {
 
-    private var movies: ArrayList<Movie> = ArrayList()
-    private var criteria = SearchCriteria.POPULAR
-    private var gridState: Parcelable? = null
+    @State @JvmField var movies: ArrayList<Movie> = ArrayList()
+    @State @JvmField var criteria = SearchCriteria.POPULAR
+    @State @JvmField var gridState: Parcelable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         FlowManager.init(applicationContext)
-
         setContentView(R.layout.activity_movie_list)
+        Icepick.restoreInstanceState(this, savedInstanceState)
 
         movie_grid.emptyView = no_movies_text
         movie_grid.onItemClickListener = AdapterView.OnItemClickListener { parent, _, position, _ ->
@@ -48,17 +49,8 @@ class MovieListActivity : AppCompatActivity() {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putParcelableArrayList(MOVIES_LIST_KEY, movies)
-        outState.putSerializable(CRITERIA_KEY, criteria)
-        outState.putParcelable(GRID_STATE_KEY, movie_grid.onSaveInstanceState())
         super.onSaveInstanceState(outState)
-    }
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        movies = savedInstanceState.getParcelableArrayList(MOVIES_LIST_KEY)
-        criteria = savedInstanceState.getSerializable(CRITERIA_KEY) as SearchCriteria
-        gridState = savedInstanceState.getParcelable(GRID_STATE_KEY)
+        Icepick.saveInstanceState(this, outState)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -89,15 +81,5 @@ class MovieListActivity : AppCompatActivity() {
         val moviesAdapter = MoviesAdapter(this@MovieListActivity, movies)
         movie_grid.adapter = moviesAdapter
         gridState?.let { movie_grid.onRestoreInstanceState(gridState) }
-    }
-
-    private fun getFavoriteMovies() {
-        updateAdapter(getAllMovies() ?: ArrayList())
-    }
-
-    companion object {
-        private val MOVIES_LIST_KEY = "movies-list"
-        private val CRITERIA_KEY = "criteria"
-        private val GRID_STATE_KEY = "grid-state"
     }
 }

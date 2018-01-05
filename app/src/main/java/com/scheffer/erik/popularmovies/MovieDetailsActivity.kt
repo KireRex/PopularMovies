@@ -19,16 +19,14 @@ import com.scheffer.erik.popularmovies.moviedatabaseapi.adapters.MovieTrailerAda
 import com.scheffer.erik.popularmovies.moviedatabaseapi.models.*
 import com.scheffer.erik.popularmovies.utils.isConnected
 import com.squareup.picasso.Picasso
+import icepick.Icepick
+import icepick.State
 import kotlinx.android.synthetic.main.activity_movie_details.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 const val MOVIE_EXTRA_NAME = "movie"
-const val REVIEWS_STATE_KEY = "reviews-state"
-const val TRAILERS_STATE_KEY = "trailers-state"
-const val TRAILERS_LIST_KEY = "trailers-list"
-const val REVIEWS_LIST_KEY = "reviews-list"
 
 class MovieDetailsActivity : AppCompatActivity() {
 
@@ -37,15 +35,18 @@ class MovieDetailsActivity : AppCompatActivity() {
     private lateinit var movie: Movie
     private var trailersLayoutManager: LinearLayoutManager? = null
     private var reviewsLayoutManager: LinearLayoutManager? = null
-    private var trailersState: Parcelable? = null
-    private var reviewsState: Parcelable? = null
 
-    private var trailers: ArrayList<Trailer> = ArrayList()
-    private var reviews: ArrayList<Review> = ArrayList()
+    @State @JvmField var trailersState: Parcelable? = null
+    @State @JvmField var reviewsState: Parcelable? = null
+
+    @State @JvmField var trailers: ArrayList<Trailer> = ArrayList()
+    @State @JvmField var reviews: ArrayList<Review> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movie_details)
+        Icepick.restoreInstanceState(this, savedInstanceState)
+
         movie = intent.getParcelableExtra(MOVIE_EXTRA_NAME)
         movie = getMovieByExternalId(movie.id) ?: movie
 
@@ -92,21 +93,8 @@ class MovieDetailsActivity : AppCompatActivity() {
         trailersState = trailersLayoutManager!!.onSaveInstanceState()
         reviewsState = reviewsLayoutManager!!.onSaveInstanceState()
 
-        outState.putParcelable(TRAILERS_STATE_KEY, trailersState)
-        outState.putParcelable(REVIEWS_STATE_KEY, reviewsState)
-        outState.putParcelableArrayList(TRAILERS_LIST_KEY, trailers)
-        outState.putParcelableArrayList(REVIEWS_LIST_KEY, reviews)
-
         super.onSaveInstanceState(outState)
-    }
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-
-        reviewsState = savedInstanceState.getParcelable(REVIEWS_STATE_KEY)
-        trailersState = savedInstanceState.getParcelable(TRAILERS_STATE_KEY)
-        trailers = savedInstanceState.getParcelableArrayList(TRAILERS_LIST_KEY)
-        reviews = savedInstanceState.getParcelableArrayList(REVIEWS_LIST_KEY)
+        Icepick.saveInstanceState(this, outState)
     }
 
     private fun setUpTrailersRecyclerView(movie: Movie) {
