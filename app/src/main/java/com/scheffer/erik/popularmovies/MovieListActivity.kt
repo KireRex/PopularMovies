@@ -1,6 +1,5 @@
 package com.scheffer.erik.popularmovies
 
-import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
 import android.support.v7.app.AppCompatActivity
@@ -15,6 +14,7 @@ import com.scheffer.erik.popularmovies.moviedatabaseapi.models.Movie
 import icepick.Icepick
 import icepick.State
 import kotlinx.android.synthetic.main.activity_movie_list.*
+import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
 
 class MovieListActivity : AppCompatActivity() {
@@ -31,11 +31,8 @@ class MovieListActivity : AppCompatActivity() {
 
         movie_grid.emptyView = no_movies_text
         movie_grid.onItemClickListener = AdapterView.OnItemClickListener { parent, _, position, _ ->
-            val movieDetailsIntent = Intent(this@MovieListActivity,
-                                            MovieDetailsActivity::class.java)
-            movieDetailsIntent.putExtra(MOVIE_EXTRA_NAME,
-                                        parent.getItemAtPosition(position) as Movie)
-            startActivity(movieDetailsIntent)
+            startActivity<MovieDetailsActivity>(
+                    MOVIE_EXTRA_NAME to parent.getItemAtPosition(position) as Movie)
         }
     }
 
@@ -78,8 +75,7 @@ class MovieListActivity : AppCompatActivity() {
             toast(resources.getString(R.string.retrieve_data_error))
         }
         movies = ArrayList(result)
-        val moviesAdapter = MoviesAdapter(this@MovieListActivity, movies)
-        movie_grid.adapter = moviesAdapter
+        movie_grid.adapter = MoviesAdapter(this@MovieListActivity, movies)
         gridState?.let { movie_grid.onRestoreInstanceState(gridState) }
     }
 }

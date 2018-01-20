@@ -139,7 +139,6 @@ class MovieDetailsActivity : AppCompatActivity() {
         if (reviews.isEmpty()) {
             reviewsRecyclerView.adapter = reviewAdapter
             if (isConnected(this)) {
-
                 MovieFacade().getMovieReviews(movie.id).enqueue(object : Callback<ReviewResultList?> {
                     override fun onResponse(call: Call<ReviewResultList?>?,
                                             response: Response<ReviewResultList?>?) {
@@ -164,16 +163,10 @@ class MovieDetailsActivity : AppCompatActivity() {
         }
     }
 
-    private fun getRecyclerView(recyclerViewId: Int,
-                                layoutManager: LinearLayoutManager): RecyclerView {
-        val reviewsRecyclerView = findViewById<RecyclerView>(recyclerViewId)
-        reviewsRecyclerView.setHasFixedSize(true)
-        reviewsRecyclerView.layoutManager = layoutManager
-        reviewsRecyclerView.addItemDecoration(
-                DividerItemDecoration(reviewsRecyclerView.context,
-                                      layoutManager.orientation))
-        return reviewsRecyclerView
-    }
-
-
+    private fun getRecyclerView(recyclerViewId: Int, layoutManager: LinearLayoutManager) =
+            findViewById<RecyclerView>(recyclerViewId).apply {
+                setHasFixedSize(true)
+                this.layoutManager = layoutManager
+                addItemDecoration(DividerItemDecoration(context, layoutManager.orientation))
+            }
 }

@@ -16,7 +16,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 
 class MovieFacade {
-    private val retrofit: Retrofit
     private val movieService: MovieService
 
     init {
@@ -30,7 +29,7 @@ class MovieFacade {
                     request = request.newBuilder().url(url).build()
                     chain.proceed(request)
                 }).build()
-        retrofit = Retrofit.Builder()
+        movieService = Retrofit.Builder()
                 .baseUrl(MOVIES_DATABASE_BASE_URL)
                 .addConverterFactory(
                         GsonConverterFactory.create(
@@ -40,7 +39,7 @@ class MovieFacade {
                                         .create()))
                 .client(client)
                 .build()
-        movieService = retrofit.create(MovieService::class.java)
+                .create(MovieService::class.java)
     }
 
     fun getMovies(criteria: SearchCriteria,
@@ -51,7 +50,6 @@ class MovieFacade {
             } else {
                 processMovies(getAllMovies() ?: ArrayList())
             }
-
 
     private fun getFromOnlineApi(criteria: SearchCriteria,
                                  processMovies: (List<Movie>) -> Unit,
@@ -71,7 +69,6 @@ class MovieFacade {
                     t?.printStackTrace()
                 }
             })
-
         }
     }
 
